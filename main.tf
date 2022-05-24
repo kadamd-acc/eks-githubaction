@@ -1,21 +1,4 @@
-provider "aws" {
-  region = "eu-west-2"
-  profile = "AWS_741032333307_User"
-}
 
-provider "helm" {
-  kubernetes {
-    host   = module.eks.eks_cluster_endpoint
-    cluster_ca_certificate = base64decode(module.eks.eks_cluster_certificate_authority_data)
-
-    exec {
-      api_version = "client.authentication.k8s.io/v1alpha1"
-      command     = "aws"
-      # This requires the awscli to be installed locally where Terraform is executed
-      args = ["eks", "get-token", "--cluster-name", module.eks.eks_cluster_id]
-    }
-  }
-}
 
 
 module "vpc" {
@@ -42,12 +25,32 @@ module "eks" {
     private_subnets                     =  module.vpc.aws_subnets_private
     public_subnets                      =  module.vpc.aws_subnets_public
     fargate_namespace                   =  var.fargate_namespace
+
+    depends_on = [module.vpc]
 }
+
+
+module "load_balancer_controller" {
+  source = "./aws-lb-controller"
+
+  enabled = true
+
+  cluster_identity_oidc_issuer     = module.eks.eks_cluster_oidc_issuer_url
+  cluster_identity_oidc_issuer_arn = module.eks.oidc_provider_arn
+  cluster_name                     = module.eks.eks_cluster_id
+
+  depends_on = [module.eks]
+}
+
+
+
+
 
 
  #---------------------------------------------
 # Deploy Kubernetes Add-ons with sub module
 #---------------------------------------------
+/*
 module "eks_kubernetes_addons" {
   source         = "./kubernetes-addons"
   eks_cluster_id = module.eks.eks_cluster_id
@@ -62,9 +65,9 @@ module "eks_kubernetes_addons" {
   #enable_cluster_autoscaler           = true
   #enable_aws_efs_csi_driver           = true
 
-  depends_on = [module.eks.eks_fargate_coredns, module.eks.eks_cluster_name]
+  depends_on = [module.eks.eks_cluster_id]
 }
-
+*/
 
 
 

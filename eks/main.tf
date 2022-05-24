@@ -52,7 +52,7 @@ Creating IAM Role for EKS Cluster
 =====================================*/
 
 resource "aws_iam_role" "eks_cluster_role" {
-  name = "${var.cluster_name}-cluster-role"
+  name = "${var.cluster_name}-${var.environment}-cluster-role"
   description = "Allow cluster to manage node groups, fargate nodes and cloudwatch logs"
   force_detach_policies = true
   assume_role_policy = <<POLICY
@@ -102,7 +102,7 @@ resource "aws_cloudwatch_log_group" "cloudwatch_log_group" {
 /* =======================================
 Creating Fargate Profile for Applications
 ==========================================*/
-
+/*
 resource "aws_eks_fargate_profile" "eks_fargate" {
   cluster_name           = aws_eks_cluster.eks_cluster.name
   fargate_profile_name   = "${var.cluster_name}-${var.environment}-app-fargate-profile"
@@ -118,11 +118,11 @@ resource "aws_eks_fargate_profile" "eks_fargate" {
     delete   = "30m"
   }
 }
-
+*/
 /* =======================================
 Creating IAM Role for Fargate profile
 ==========================================*/
-
+/*
 resource "aws_iam_role" "eks_fargate_role" {
   name = "${var.cluster_name}-fargate_cluster_role"
   description = "Allow fargate cluster to allocate resources for running pods"
@@ -162,7 +162,7 @@ resource "aws_iam_role_policy_attachment" "AmazonEKSVPCResourceController" {
   role       = aws_iam_role.eks_fargate_role.name
 }
 
-
+*/
 
 /* =======================================
 Creating Fargate Profile for CoreDNS
@@ -176,9 +176,10 @@ resource "aws_eks_fargate_profile" "eks_fargate_coredns" {
 
   selector {
     namespace = "kube-system"
-    labels = {
+   /* labels = {
             k8s-app = "kube-dns"   
             }
+    */
   }
 
   timeouts {
@@ -283,14 +284,24 @@ resource "aws_iam_role_policy_attachment" "AmazonEKSVPCResourceController2" {
 #  role       = aws_iam_role.eks_node_group_role.name
 #}
 
+
+
+
+
+################################################################################
+# IRSA
+# Note - this is different from EKS identity provider
+################################################################################
+
 data "tls_certificate" "auth" {
   url = aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer
 }
 
-resource "aws_iam_openid_connect_provider" "main" {
+resource "aws_iam_openid_connect_provider" "oidc_provider" {
   client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = [data.tls_certificate.auth.certificates[0].sha1_fingerprint]
+  thumbprint_list = concat([data.tls_certificate.auth.certificates[0].sha1_fingerprint])
   url             = aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer
-}
 
+  tags = {  Name  = "${var.cluster_name}-${var.environment}-eks-irsa" }
+}
 
