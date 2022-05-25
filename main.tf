@@ -29,21 +29,84 @@ module "eks" {
     depends_on = [module.vpc]
 }
 
-
+/*
 module "load_balancer_controller" {
   source = "./aws-lb-controller"
 
   enabled = true
 
-  cluster_identity_oidc_issuer     = module.eks.eks_cluster_oidc_issuer_url
+  cluster_identity_oidc_issuer     = module.eks.oidc_provider  #eks_cluster_oidc_issuer_url
   cluster_identity_oidc_issuer_arn = module.eks.oidc_provider_arn
   cluster_name                     = module.eks.eks_cluster_id
 
   depends_on = [module.eks]
 }
+*/
+
+/*
+module "new_load_balancer_controller" {
+  source = "./new-aws-lb-controller"
+
+  #enabled = true
+
+  cluster_identity_oidc_issuer_url     = module.eks.oidc_provider  #eks_cluster_oidc_issuer_url
+  cluster_identity_oidc_issuer_arn = module.eks.oidc_provider_arn
+  cluster_name                     = module.eks.eks_cluster_id
+  environment                      =  var.environment
+  depends_on = [module.eks]
+
+}
+*/
 
 
+/*
 
+data "aws_region" "current" {}
+
+
+data "aws_eks_cluster" "target" {
+  name = var.cluster_name
+}
+
+data "aws_eks_cluster_auth" "aws_iam_authenticator" {
+  name = data.aws_eks_cluster.target.name
+}
+
+provider "kubernetes" {
+  alias = "eks"
+  host                   = data.aws_eks_cluster.target.endpoint
+  token                  = data.aws_eks_cluster_auth.aws_iam_authenticator.token
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.target.certificate_authority[0].data)
+  #load_config_file       = false
+}
+
+provider "helm" {
+  alias = "eks"
+  kubernetes {
+    host                   = data.aws_eks_cluster.target.endpoint
+    token                  = data.aws_eks_cluster_auth.aws_iam_authenticator.token
+    cluster_ca_certificate = base64decode(data.aws_eks_cluster.target.certificate_authority[0].data)
+  }
+}
+
+module "alb_controller" {
+  source  = "iplabs/alb-controller/kubernetes"
+  version = "3.4.0"
+
+  providers = {
+    kubernetes = "kubernetes.eks",
+    helm       = "helm.eks"
+  }
+
+  k8s_cluster_type = "eks"
+  k8s_namespace    = "kube-system"
+
+  aws_region_name  = data.aws_region.current.name
+  k8s_cluster_name = data.aws_eks_cluster.target.name
+}
+
+
+*/
 
 
 
