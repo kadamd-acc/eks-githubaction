@@ -3,12 +3,14 @@
 /* =====================
 Creating EKS Cluster 
 ========================*/
+
+
 resource "aws_eks_cluster" "eks_cluster" {
   name     = "${var.cluster_name}-${var.environment}"
    
   role_arn = aws_iam_role.eks_cluster_role.arn
   enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
-  
+  version  = var.cluster_version
   
    vpc_config {
     subnet_ids =  concat(var.public_subnets, var.private_subnets)
@@ -102,7 +104,7 @@ resource "aws_cloudwatch_log_group" "cloudwatch_log_group" {
 /* =======================================
 Creating Fargate Profile for Applications
 ==========================================*/
-/*
+
 resource "aws_eks_fargate_profile" "eks_fargate" {
   cluster_name           = aws_eks_cluster.eks_cluster.name
   fargate_profile_name   = "${var.cluster_name}-${var.environment}-app-fargate-profile"
@@ -110,7 +112,7 @@ resource "aws_eks_fargate_profile" "eks_fargate" {
   subnet_ids             = var.private_subnets
 
   selector {
-    namespace = "${var.fargate_namespace}"
+    namespace = var.fargate_app_namespace
   }
 
   timeouts {
@@ -118,11 +120,11 @@ resource "aws_eks_fargate_profile" "eks_fargate" {
     delete   = "30m"
   }
 }
-*/
+
 /* =======================================
 Creating IAM Role for Fargate profile
 ==========================================*/
-/*
+
 resource "aws_iam_role" "eks_fargate_role" {
   name = "${var.cluster_name}-fargate_cluster_role"
   description = "Allow fargate cluster to allocate resources for running pods"
@@ -162,16 +164,16 @@ resource "aws_iam_role_policy_attachment" "AmazonEKSVPCResourceController" {
   role       = aws_iam_role.eks_fargate_role.name
 }
 
-*/
+
 
 /* =======================================
 Creating Fargate Profile for CoreDNS
 ==========================================*/
 
-resource "aws_eks_fargate_profile" "eks_fargate_coredns" {
+resource "aws_eks_fargate_profile" "eks_fargate_system" {
   cluster_name           = aws_eks_cluster.eks_cluster.name
-  fargate_profile_name   = "${var.cluster_name}-${var.environment}-coredns-fargate-profile"
-  pod_execution_role_arn = aws_iam_role.eks_fargate_core_dns_role.arn
+  fargate_profile_name   = "${var.cluster_name}-${var.environment}-system-fargate-profile"
+  pod_execution_role_arn = aws_iam_role.eks_fargate_system_role.arn
   subnet_ids             = var.private_subnets
 
   selector {
@@ -192,8 +194,8 @@ resource "aws_eks_fargate_profile" "eks_fargate_coredns" {
 Creating IAM Role for Fargate profile CoreDNS
 ==============================================*/
 
-resource "aws_iam_role" "eks_fargate_core_dns_role" {
-  name = "${var.cluster_name}-eks_fargate_core_dns_role"
+resource "aws_iam_role" "eks_fargate_system_role" {
+  name = "${var.cluster_name}-eks_fargate_system_role"
   description = "Allow fargate cluster to allocate resources for running pods"
   force_detach_policies = true
   assume_role_policy = <<POLICY
@@ -217,18 +219,37 @@ POLICY
 
 resource "aws_iam_role_policy_attachment" "AmazonEKSFargatePodExecutionRolePolicy2" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy"
-  role       = aws_iam_role.eks_fargate_core_dns_role.name
+  role       = aws_iam_role.eks_fargate_system_role.name
 }
 
 resource "aws_iam_role_policy_attachment" "AmazonEKSClusterPolicy2" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.eks_fargate_core_dns_role.name
+  role       = aws_iam_role.eks_fargate_system_role.name
 }
 
 
 resource "aws_iam_role_policy_attachment" "AmazonEKSVPCResourceController2" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
-  role       = aws_iam_role.eks_fargate_core_dns_role.name
+  role       = aws_iam_role.eks_fargate_system_role.name
+}
+
+
+
+################################################################################
+# IRSA
+# Note - this is different from EKS identity provider
+################################################################################
+
+data "tls_certificate" "auth" {
+  url = aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer
+}
+
+resource "aws_iam_openid_connect_provider" "oidc_provider" {
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = concat([data.tls_certificate.auth.certificates[0].sha1_fingerprint])
+  url             = aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer
+
+  tags = {  Name  = "${var.cluster_name}-${var.environment}-eks-irsa" }
 }
 
 
@@ -285,23 +306,4 @@ resource "aws_iam_role_policy_attachment" "AmazonEKSVPCResourceController2" {
 #}
 
 
-
-
-
-################################################################################
-# IRSA
-# Note - this is different from EKS identity provider
-################################################################################
-
-data "tls_certificate" "auth" {
-  url = aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer
-}
-
-resource "aws_iam_openid_connect_provider" "oidc_provider" {
-  client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = concat([data.tls_certificate.auth.certificates[0].sha1_fingerprint])
-  url             = aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer
-
-  tags = {  Name  = "${var.cluster_name}-${var.environment}-eks-irsa" }
-}
 
