@@ -59,13 +59,13 @@ module "new_load_balancer_controller" {
 */
 
 
-/*
+
 
 data "aws_region" "current" {}
 
 
 data "aws_eks_cluster" "target" {
-  name = var.cluster_name
+  name = module.eks.eks_cluster_name
 }
 
 data "aws_eks_cluster_auth" "aws_iam_authenticator" {
@@ -89,9 +89,10 @@ provider "helm" {
   }
 }
 
+
 module "alb_controller" {
-  source  = "iplabs/alb-controller/kubernetes"
-  version = "3.4.0"
+  source  = "./another-lb-controller"
+  #version = "3.4.0"
 
   providers = {
     kubernetes = "kubernetes.eks",
@@ -103,10 +104,13 @@ module "alb_controller" {
 
   aws_region_name  = data.aws_region.current.name
   k8s_cluster_name = data.aws_eks_cluster.target.name
+  alb_controller_depends_on = ""
+  depends_on = [module.eks]
 }
 
 
-*/
+
+
 
 
 
