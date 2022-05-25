@@ -10,7 +10,7 @@ variable "availability_zones_private" {}
 variable "cidr_block_internet_gw" {}
 variable "cidr_block_nat_gw" {}
 variable "eks_node_group_instance_types" {}
-variable "fargate_namespace" {}
+variable "fargate_app_namespace" {}
 variable "secret_id" {}
 variable "identifier" {}
 variable "allocated_storage" {}
@@ -19,4 +19,6 @@ variable "engine" {}
 variable "engine_version" {}
 variable "instance_class" {}
 variable "database_name" {}
+variable "cluster_version" {}
+
 

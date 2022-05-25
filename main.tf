@@ -17,94 +17,67 @@ module "vpc" {
 }
 
 
+
 module "eks" {
     source                              =  "./eks"
     cluster_name                        =  var.cluster_name
+    cluster_version                     =  var.cluster_version
     environment                         =  var.environment
     eks_node_group_instance_types       =  var.eks_node_group_instance_types
     private_subnets                     =  module.vpc.aws_subnets_private
     public_subnets                      =  module.vpc.aws_subnets_public
-    fargate_namespace                   =  var.fargate_namespace
+    fargate_app_namespace               =  var.fargate_app_namespace
 
     depends_on = [module.vpc]
 }
-
-/*
-module "load_balancer_controller" {
-  source = "./aws-lb-controller"
-
-  enabled = true
-
-  cluster_identity_oidc_issuer     = module.eks.oidc_provider  #eks_cluster_oidc_issuer_url
-  cluster_identity_oidc_issuer_arn = module.eks.oidc_provider_arn
-  cluster_name                     = module.eks.eks_cluster_id
-
-  depends_on = [module.eks]
-}
-*/
-
-/*
-module "new_load_balancer_controller" {
-  source = "./new-aws-lb-controller"
-
-  #enabled = true
-
-  cluster_identity_oidc_issuer_url     = module.eks.oidc_provider  #eks_cluster_oidc_issuer_url
-  cluster_identity_oidc_issuer_arn = module.eks.oidc_provider_arn
-  cluster_name                     = module.eks.eks_cluster_id
-  environment                      =  var.environment
-  depends_on = [module.eks]
-
-}
-*/
-
-
 
 
 data "aws_region" "current" {}
 
 
-data "aws_eks_cluster" "target" {
+data "aws_eks_cluster" "eks_cluster" {
   name = module.eks.eks_cluster_name
+  depends_on = [module.eks]
 }
 
 data "aws_eks_cluster_auth" "aws_iam_authenticator" {
-  name = data.aws_eks_cluster.target.name
+  name = data.aws_eks_cluster.eks_cluster.name
+  depends_on = [module.eks]
 }
 
 provider "kubernetes" {
-  alias = "eks"
-  host                   = data.aws_eks_cluster.target.endpoint
+ # alias = "eks"
+  host                   = data.aws_eks_cluster.eks_cluster.endpoint
   token                  = data.aws_eks_cluster_auth.aws_iam_authenticator.token
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.target.certificate_authority[0].data)
-  #load_config_file       = false
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks_cluster.certificate_authority[0].data)
 }
 
 provider "helm" {
-  alias = "eks"
+  #alias = "eks"
   kubernetes {
-    host                   = data.aws_eks_cluster.target.endpoint
+    host                   = data.aws_eks_cluster.eks_cluster.endpoint
     token                  = data.aws_eks_cluster_auth.aws_iam_authenticator.token
-    cluster_ca_certificate = base64decode(data.aws_eks_cluster.target.certificate_authority[0].data)
+    cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks_cluster.certificate_authority[0].data)
+    config_path = "~/.kube/config"
   }
 }
 
 
 module "alb_controller" {
-  source  = "./another-lb-controller"
-  #version = "3.4.0"
-
+  source  = "./aws-lb-controller"
+/*
   providers = {
     kubernetes = "kubernetes.eks",
     helm       = "helm.eks"
   }
+  */
 
   k8s_cluster_type = "eks"
   k8s_namespace    = "kube-system"
 
   aws_region_name  = data.aws_region.current.name
-  k8s_cluster_name = data.aws_eks_cluster.target.name
-  alb_controller_depends_on = ""
+  k8s_cluster_name = data.aws_eks_cluster.eks_cluster.name
+  alb_controller_depends_on =  ""
   depends_on = [module.eks]
 }
 
@@ -114,27 +87,6 @@ module "alb_controller" {
 
 
 
- #---------------------------------------------
-# Deploy Kubernetes Add-ons with sub module
-#---------------------------------------------
-/*
-module "eks_kubernetes_addons" {
-  source         = "./kubernetes-addons"
-  eks_cluster_id = module.eks.eks_cluster_id
-
-  # EKS Managed Add-ons
-  #enable_amazon_eks_coredns    = true
-  #enable_amazon_eks_kube_proxy = true
-
-  # K8s Add-ons
-  enable_aws_load_balancer_controller = true
-  #enable_metrics_server               = true
-  #enable_cluster_autoscaler           = true
-  #enable_aws_efs_csi_driver           = true
-
-  depends_on = [module.eks.eks_cluster_id]
-}
-*/
 
 
 
