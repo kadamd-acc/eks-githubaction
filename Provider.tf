@@ -1,13 +1,20 @@
 provider "aws" {
-  region  = "eu-west-2"
-  profile = "AWS_741032333307_User"
+  region  = var.region_name
+  profile = var.user_profile
 }
 
-data "aws_eks_cluster" "cluster" {
-  name = module.eks.eks_cluster_id
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.eks_cluster.endpoint
+  token                  = data.aws_eks_cluster_auth.aws_iam_authenticator.token
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks_cluster.certificate_authority[0].data)
+  config_path = "~/.kube/config"
 }
 
-data "aws_eks_cluster_auth" "cluster" {
-  name = module.eks.eks_cluster_id
+provider "helm" {
+  kubernetes {
+    host                   = data.aws_eks_cluster.eks_cluster.endpoint
+    token                  = data.aws_eks_cluster_auth.aws_iam_authenticator.token
+    cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks_cluster.certificate_authority[0].data)
+    config_path = "~/.kube/config"
+  }
 }
-

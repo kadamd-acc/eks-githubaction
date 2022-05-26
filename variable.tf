@@ -1,5 +1,8 @@
 variable "environment" {}
 variable "cluster_name" {}
+variable "cluster_type" {
+  default = "eks"
+}
 variable "cluster_group" {}
 variable "vpc_cidr" {}
 variable "vpc_name" {}
@@ -20,5 +23,17 @@ variable "engine_version" {}
 variable "instance_class" {}
 variable "database_name" {}
 variable "cluster_version" {}
+variable "region_name" {
+  description = "AWS Region code"
+  default = "eu-west-2"
+}
+variable "user_profile" {
+  description = "AWS User profile to execute commands"
+  default = "default"
+}
+variable "user_os" {
+  description = "Operating system used by user to execute Terraform, Kubectl, aws commands. e.g. \"windows\" or \"linux\""
+}
+
 
 

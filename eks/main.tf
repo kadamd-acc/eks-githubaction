@@ -105,7 +105,7 @@ resource "aws_cloudwatch_log_group" "cloudwatch_log_group" {
 Creating Fargate Profile for Applications
 ==========================================*/
 
-resource "aws_eks_fargate_profile" "eks_fargate" {
+resource "aws_eks_fargate_profile" "eks_fargate_app" {
   cluster_name           = aws_eks_cluster.eks_cluster.name
   fargate_profile_name   = "${var.cluster_name}-${var.environment}-app-fargate-profile"
   pod_execution_role_arn = aws_iam_role.eks_fargate_role.arn
@@ -178,12 +178,10 @@ resource "aws_eks_fargate_profile" "eks_fargate_system" {
 
   selector {
     namespace = "kube-system"
-   /* labels = {
-            k8s-app = "kube-dns"   
-            }
-    */
   }
-
+  selector {
+    namespace = "default"
+  }
   timeouts {
     create   = "30m"
     delete   = "30m"

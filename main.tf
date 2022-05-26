@@ -32,54 +32,31 @@ module "eks" {
 }
 
 
-data "aws_region" "current" {}
 
+module "coredns_patching" {
+  source  = "./coredns-patch"
 
-data "aws_eks_cluster" "eks_cluster" {
-  name = module.eks.eks_cluster_name
-  depends_on = [module.eks]
-}
-
-data "aws_eks_cluster_auth" "aws_iam_authenticator" {
-  name = data.aws_eks_cluster.eks_cluster.name
-  depends_on = [module.eks]
-}
-
-provider "kubernetes" {
- # alias = "eks"
-  host                   = data.aws_eks_cluster.eks_cluster.endpoint
-  token                  = data.aws_eks_cluster_auth.aws_iam_authenticator.token
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks_cluster.certificate_authority[0].data)
-}
-
-provider "helm" {
-  #alias = "eks"
-  kubernetes {
-    host                   = data.aws_eks_cluster.eks_cluster.endpoint
-    token                  = data.aws_eks_cluster_auth.aws_iam_authenticator.token
-    cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks_cluster.certificate_authority[0].data)
-    config_path = "~/.kube/config"
-  }
-}
-
-
-module "alb_controller" {
-  source  = "./aws-lb-controller"
-/*
-  providers = {
-    kubernetes = "kubernetes.eks",
-    helm       = "helm.eks"
-  }
-  */
-
-  k8s_cluster_type = "eks"
+  k8s_cluster_type = var.cluster_type
   k8s_namespace    = "kube-system"
+  k8s_cluster_name = module.eks.eks_cluster_name
+  user_profile =   var.user_profile
+  user_os = var.user_os
 
-  aws_region_name  = data.aws_region.current.name
-  k8s_cluster_name = data.aws_eks_cluster.eks_cluster.name
-  alb_controller_depends_on =  ""
   depends_on = [module.eks]
+
 }
+
+
+
+module "aws_alb_controller" {
+  source  = "./aws-lb-controller"
+  k8s_cluster_type = var.cluster_type
+  k8s_namespace    = "kube-system"
+  k8s_cluster_name = module.eks.eks_cluster_name
+  alb_controller_depends_on =  ""
+  depends_on = [module.eks, module.coredns_patching]
+}
+
 
 
 

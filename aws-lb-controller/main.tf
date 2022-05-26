@@ -18,6 +18,7 @@ data "aws_region" "current" {
 
 data "aws_caller_identity" "current" {}
 
+
 # The EKS cluster (if any) that represents the installation target.
 data "aws_eks_cluster" "selected" {
   count      = var.k8s_cluster_type == "eks" ? 1 : 0
@@ -235,6 +236,8 @@ resource "helm_release" "alb_controller" {
 }
 
 #May not require the below code block
+
+/*
 # Generate a kubeconfig file for the EKS cluster to use in provisioners
 data "template_file" "kubeconfig" {
   template = <<-EOF
@@ -307,3 +310,4 @@ resource "null_resource" "supply_target_group_arns" {
   }
   depends_on = [helm_release.alb_controller]
 }
+*/

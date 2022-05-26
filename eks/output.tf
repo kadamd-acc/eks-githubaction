@@ -31,6 +31,10 @@ output "eks_cluster_version" {
   description = "The Kubernetes version for the cluster"
   value       = try(aws_eks_cluster.eks_cluster.version, "")
 }
+output "eks_fargate_profile_status" {
+  description = "The EKS Cluster System fargate profile status where CoreDNS is running"
+  value       = try(aws_eks_fargate_profile.eks_fargate_system.status, "")
+}
 
 output "eks_cluster_platform_version" {
   description = "Platform version for the cluster"
