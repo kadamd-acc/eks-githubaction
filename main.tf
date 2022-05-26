@@ -53,7 +53,7 @@ module "aws_alb_controller" {
   k8s_cluster_type = var.cluster_type
   k8s_namespace    = "kube-system"
   k8s_cluster_name = module.eks.eks_cluster_name
-  alb_controller_depends_on =  ""
+ # alb_controller_depends_on =  ""
   depends_on = [module.eks, module.coredns_patching]
 }
 

@@ -6,7 +6,7 @@ Creating EKS Cluster
 
 
 resource "aws_eks_cluster" "eks_cluster" {
-  name     = "${var.cluster_name}-${var.environment}"
+  name     = substr("${var.cluster_name}-${var.environment}",0,64)
    
   role_arn = aws_iam_role.eks_cluster_role.arn
   enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
@@ -32,7 +32,7 @@ resource "aws_eks_cluster" "eks_cluster" {
 Creating IAM Policy for EKS Cluster 
 =====================================*/
 resource "aws_iam_policy" "AmazonEKSClusterCloudWatchMetricsPolicy" {
-  name   = "AmazonEKSClusterCloudWatchMetricsPolicy"
+  name   = substr("${var.cluster_name}-${var.environment}-AmazonEKSClusterCloudWatchMetricsPolicy",0,64)
   policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -54,7 +54,7 @@ Creating IAM Role for EKS Cluster
 =====================================*/
 
 resource "aws_iam_role" "eks_cluster_role" {
-  name = "${var.cluster_name}-${var.environment}-cluster-role"
+  name = substr("${var.cluster_name}-${var.environment}-cluster-role",0,64)
   description = "Allow cluster to manage node groups, fargate nodes and cloudwatch logs"
   force_detach_policies = true
   assume_role_policy = <<POLICY
@@ -107,7 +107,7 @@ Creating Fargate Profile for Applications
 
 resource "aws_eks_fargate_profile" "eks_fargate_app" {
   cluster_name           = aws_eks_cluster.eks_cluster.name
-  fargate_profile_name   = "${var.cluster_name}-${var.environment}-app-fargate-profile"
+  fargate_profile_name   = substr("${var.cluster_name}-${var.environment}-app-fargate-profile",0,64)
   pod_execution_role_arn = aws_iam_role.eks_fargate_role.arn
   subnet_ids             = var.private_subnets
 
@@ -172,7 +172,7 @@ Creating Fargate Profile for CoreDNS
 
 resource "aws_eks_fargate_profile" "eks_fargate_system" {
   cluster_name           = aws_eks_cluster.eks_cluster.name
-  fargate_profile_name   = "${var.cluster_name}-${var.environment}-system-fargate-profile"
+  fargate_profile_name   = substr("${var.cluster_name}-${var.environment}-system-fargate-profile",0,64)
   pod_execution_role_arn = aws_iam_role.eks_fargate_system_role.arn
   subnet_ids             = var.private_subnets
 
@@ -193,7 +193,7 @@ Creating IAM Role for Fargate profile CoreDNS
 ==============================================*/
 
 resource "aws_iam_role" "eks_fargate_system_role" {
-  name = "${var.cluster_name}-eks_fargate_system_role"
+  name = substr("${var.cluster_name}-eks_fargate_system_role",0,64)
   description = "Allow fargate cluster to allocate resources for running pods"
   force_detach_policies = true
   assume_role_policy = <<POLICY

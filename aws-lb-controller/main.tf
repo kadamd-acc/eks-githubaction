@@ -80,7 +80,7 @@ resource "aws_iam_role" "this" {
 
 
 resource "aws_iam_policy" "this" {
-  name        = "${var.aws_resource_name_prefix}${var.k8s_cluster_name}-alb-management"
+  name        = substr("${var.aws_resource_name_prefix}${var.k8s_cluster_name}-alb-management",0,64)
   description = format("Permissions that are required to manage AWS Application Load Balancers.")
   path        = "/" #local.aws_iam_path_prefix
   # We use a heredoc for the policy JSON so that we can more easily diff and

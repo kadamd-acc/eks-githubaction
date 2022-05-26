@@ -32,7 +32,6 @@ EOF
 resource "null_resource" "coredns_restart" {
   count = (var.user_os == "windows" && var.k8s_cluster_type == "eks") ? 1 : 0
   provisioner "local-exec" {
-    #interpreter = ["/bin/bash", "-c"]
     interpreter = ["PowerShell", "-Command"]
     command     = <<EOF
 kubectl  rollout restart -n '${var.k8s_namespace}'  deployment coredns
@@ -43,6 +42,7 @@ EOF
   ]
 }
 
+# ==========================================================================================================
 
 # Per AWS docs, you have to patch the coredns deployment to remove the
 # constraint that it wants to run on ec2, then restart it.
