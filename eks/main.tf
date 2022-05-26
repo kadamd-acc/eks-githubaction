@@ -6,7 +6,7 @@ Creating EKS Cluster
 
 
 resource "aws_eks_cluster" "eks_cluster" {
-  name     = substr("${var.cluster_name}-${var.environment}",0,64)
+  name     = "${var.cluster_name}-${var.environment}"
    
   role_arn = aws_iam_role.eks_cluster_role.arn
   enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]

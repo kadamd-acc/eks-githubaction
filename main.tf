@@ -59,36 +59,11 @@ module "aws_alb_controller" {
 
 
 
+module "kubernetes_app" {
+    source                              =  "./kubernetes-app"
+    fargate_app_namespace               =  var.fargate_app_namespace
+
+  depends_on = [module.eks, module.aws_alb_controller]
+}
 
 
-
-
-
-
-
-
-#module "kubernetes" {
-#    source                              =  "./kubernetes"
-#    cluster_id                          =  module.eks.cluster_id    
-#    vpc_id                              =  module.vpc.vpc_id
-#    cluster_name                        =  module.eks.cluster_name
-#}
-
-
-
-
-#
-#module "database" {
-#    source                              =  "./database"
-#    secret_id                           =  var.secret_id
-#    identifier                          =  var.identifier
-#    allocated_storage                   =  var.allocated_storage
-#    storage_type                        =  var.storage_type
-#    engine                              =  var.engine
-#    engine_version                      =  var.engine_version
-#    instance_class                      =  var.instance_class
-#    database_name                       =  var.database_name
-#    environment                         =  var.environment
-#    vpc_id                              =  module.vpc.vpc_id
-#    private_subnets                     =  module.vpc.aws_subnets_private
-#}

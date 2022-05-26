@@ -5,7 +5,10 @@ terraform {
     aws        = ">= 3.13.0"
     local      = ">= 1.4"
     random     = ">= 2.1"
-    kubernetes = "~> 1.10"
-    helm       = ">= 1.0"
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = ">= 2.0"
+    }
+    helm       = ">= 1.4.1"
   }
 }

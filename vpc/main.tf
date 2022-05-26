@@ -1,3 +1,4 @@
+
 /*=========
 The VPC
 ===========*/
@@ -9,6 +10,7 @@ resource "aws_vpc" "main_vpc" {
 
   tags = {
     Name        = "${var.vpc_name}-${var.environment}-vpc"
+    "kubernetes.io/cluster/${var.cluster_name}-${var.environment}" = "shared"  # Refer: https://aws.amazon.com/premiumsupport/knowledge-center/eks-vpc-subnet-discovery/
     Environment = var.environment
     Group = var.cluster_group
   }
@@ -29,6 +31,8 @@ Public Subnets
 
   tags = {
     Name        = substr("public-subnet-${var.environment}-${element(var.availability_zones_public, count.index)}",0,64)
+    "kubernetes.io/role/elb" = "1"
+    "kubernetes.io/cluster/${var.cluster_name}-${var.environment}" = "shared"
     Environment = var.environment
     Group = var.cluster_group
   }
@@ -49,6 +53,8 @@ Private Subnets
 
   tags = {
     Name        = substr("private-subnet-${var.environment}-${element(var.availability_zones_private, count.index)}",0,64)
+    "kubernetes.io/role/internal-elb" = "1"
+    "kubernetes.io/cluster/${var.cluster_name}-${var.environment}" = "shared"
     Environment = var.environment
     Group = var.cluster_group
   }
