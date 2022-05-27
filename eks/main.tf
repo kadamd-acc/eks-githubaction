@@ -111,10 +111,12 @@ resource "aws_eks_fargate_profile" "eks_fargate_app" {
   pod_execution_role_arn = aws_iam_role.eks_fargate_role.arn
   subnet_ids             = var.private_subnets
 
-  selector {
-    namespace = var.fargate_app_namespace
+  dynamic "selector" {
+    for_each = var.fargate_app_namespace
+    content {
+        namespace = selector.value
+    }
   }
-
   timeouts {
     create   = "30m"
     delete   = "30m"

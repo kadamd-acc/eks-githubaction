@@ -13,7 +13,11 @@ variable "availability_zones_private" {}
 variable "cidr_block_internet_gw" {}
 variable "cidr_block_nat_gw" {}
 #variable "eks_node_group_instance_types" {}
-variable "fargate_app_namespace" {}
+variable "fargate_app_namespace" {
+  description = "Create IAM users with these names"
+  type        = list(string)
+  default     = ["ns-fargate-app", "ns-fargate-app2"]
+}
 variable "cluster_version" {}
 variable "region_name" {
   description = "AWS Region code"
@@ -26,6 +30,5 @@ variable "user_profile" {
 variable "user_os" {
   description = "Operating system used by user to execute Terraform, Kubectl, aws commands. e.g. \"windows\" or \"linux\""
 }
-
 
 
