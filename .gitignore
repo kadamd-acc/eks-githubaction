@@ -1,4 +1,9 @@
 .terraform/
+.kube/
 *.hcl
 *.lock
 *.info
+terraform.tfstate
+terraform.tfstate.backup
+.terraform*
+tfplan
