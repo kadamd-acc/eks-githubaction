@@ -65,7 +65,7 @@ resource "kubernetes_service_v1" "game-app-service" {
   depends_on = [kubernetes_deployment.game-app]
 }
 
-gg
+
 
 resource "kubernetes_ingress_v1" "game-app-ingress" {
   wait_for_load_balancer = true
