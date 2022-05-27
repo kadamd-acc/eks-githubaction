@@ -12,7 +12,7 @@ variable "private_subnets_cidr" {}
 variable "availability_zones_private" {}
 variable "cidr_block_internet_gw" {}
 variable "cidr_block_nat_gw" {}
-variable "eks_node_group_instance_types" {}
+#variable "eks_node_group_instance_types" {}
 variable "fargate_app_namespace" {}
 variable "cluster_version" {}
 variable "region_name" {

@@ -23,7 +23,7 @@ module "eks" {
     cluster_name                        =  var.cluster_name
     cluster_version                     =  var.cluster_version
     environment                         =  var.environment
-    eks_node_group_instance_types       =  var.eks_node_group_instance_types
+    #eks_node_group_instance_types       =  var.eks_node_group_instance_types
     private_subnets                     =  module.vpc.aws_subnets_private
     public_subnets                      =  module.vpc.aws_subnets_public
     fargate_app_namespace               =  var.fargate_app_namespace
@@ -57,7 +57,16 @@ module "aws_alb_controller" {
   depends_on = [module.eks, module.coredns_patching]
 }
 
+module "eks_blueprints_kubernetes_addons" {
+  source         = "./kubernetes-addons"
+  eks_cluster_id = module.eks.eks_cluster_id
 
+  # EKS Managed Add-ons
+  enable_amazon_eks_vpc_cni    = true
+  enable_amazon_eks_coredns    = true
+  enable_amazon_eks_kube_proxy = true
+  depends_on = [module.aws_alb_controller]
+}
 
 module "kubernetes_app" {
     source                              =  "./kubernetes-app"

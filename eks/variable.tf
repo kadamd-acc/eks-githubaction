@@ -6,10 +6,6 @@ variable "environment" {
   description = "the name of your environment, e.g. \"prod\""
 }
 
-variable "eks_node_group_instance_types" {
-  description  = "Instance type of node group"
-}
-
 
 variable "private_subnets" {
   description = "List of private subnet IDs"
