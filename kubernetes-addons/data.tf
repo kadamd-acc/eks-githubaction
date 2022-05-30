@@ -1,5 +1,5 @@
 data "aws_eks_cluster" "eks_cluster" {
-  name = var.eks_cluster_id
+  name = var.k8s_cluster_name
 }
 
 data "aws_partition" "current" {}
