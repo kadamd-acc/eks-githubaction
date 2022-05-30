@@ -1,12 +1,25 @@
-variable "eks_cluster_id" {
-  description = "EKS Cluster Id"
-  type        = string
-}
+
 
 variable "eks_cluster_domain" {
   description = "The domain for the EKS cluster."
   default     = ""
   type        = string
+}
+
+variable "k8s_cluster_name" {
+  description = "Name of the Kubernetes cluster. This string is used to contruct the AWS IAM permissions and roles. If targeting EKS, the corresponsing managed cluster name must match as well."
+  type        = string
+}
+
+variable "k8s_namespace" {
+  description = "Kubernetes namespace to deploy the AWS Load Balancer Controller into."
+  type        = string
+  default     = "default"
+}
+variable "k8s_cluster_type" {
+  description = "Can be set to `vanilla` or `eks`. If set to `eks`, the Kubernetes cluster will be assumed to be run on EKS which will make sure that the AWS IAM Service integration works as expected."
+  type        = string
+  default     = "vanilla"
 }
 
 variable "eks_worker_security_group_id" {

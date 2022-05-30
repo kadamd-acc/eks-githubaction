@@ -57,14 +57,17 @@ module "aws_alb_controller" {
   depends_on = [module.eks, module.coredns_patching]
 }
 
-module "eks_blueprints_kubernetes_addons" {
+module "eks_kubernetes_addons" {
   source         = "./kubernetes-addons"
-  eks_cluster_id = module.eks.eks_cluster_id
+ # eks_cluster_id = module.eks.eks_cluster_id
 
   # EKS Managed Add-ons
   enable_amazon_eks_vpc_cni    = true
-  enable_amazon_eks_coredns    = true
-  enable_amazon_eks_kube_proxy = true
+  #enable_amazon_eks_coredns    = true
+  #enable_amazon_eks_kube_proxy = true
+  k8s_cluster_type = var.cluster_type
+  k8s_namespace    = "kube-system"
+  k8s_cluster_name = module.eks.eks_cluster_name
   depends_on = [module.aws_alb_controller]
 }
 
