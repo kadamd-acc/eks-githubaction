@@ -1,14 +1,13 @@
 #-----------------AWS Managed EKS Add-ons----------------------
 
 module "aws_vpc_cni" {
-  count         = var.enable_amazon_eks_vpc_cni ? 1 : 0
-  source        = "./aws-vpc-cni"
-  #addon_config  = var.amazon_eks_vpc_cni_config
+  count = var.enable_amazon_eks_vpc_cni ? 1 : 0
+  source  = "./aws-vpc-cni"
+  k8s_cluster_type = var.k8s_cluster_type
+  k8s_namespace    = var.k8s_namespace
+  k8s_cluster_name = var.k8s_cluster_name
   addon_context = local.addon_context
-  kubernetes_namespace = "kube-system"
-  kubernetes_service_account  = "aws-node"
-  irsa_iam_policies = ["arn:${local.addon_context.aws_partition_id}:iam::aws:policy/AmazonEKS_CNI_Policy"]
-  eks_cluster_id   = var.eks_cluster_id
+
 }
 
 module "aws_coredns" {
