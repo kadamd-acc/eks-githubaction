@@ -4,7 +4,7 @@ resource "kubernetes_namespace" "application_namespace" {
     labels = {
       "app.kubernetes.io/name" = "sample-game-app"
     }
-    name = var.fargate_app_namespace
+    name = var.app_namespace
   }
 }
 
