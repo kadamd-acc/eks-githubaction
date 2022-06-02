@@ -1,6 +1,10 @@
+
+
 provider "aws" {
-  region  = var.region_name
-  profile = var.user_profile
+  region     = var.region_name
+  access_key = "ASIA2ZCHYB75YT2MMBFX"
+  secret_key = "8/+Q+dRY67AYQAz/Reb1jm8mbrgkVG9OGAdNZ4Sj"
+  token      = "IQoJb3JpZ2luX2VjEGQaCXVzLWVhc3QtMSJIMEYCIQCy8ogAW45gzQm/vIMn8AUu/SsAeqS595cs9NrRoIV08gIhALLwV+mJKGLICEdlAg0uXg/lK2pJLR+idJvTVp3KOsEDKq8CCF0QAhoMNzQxMDMyMzMzMzA3Igx12QaitCMZph4qHroqjAJLVvYg9OIdTbC19btwB+Xgow0BwfHZRkLPvs6um4Aj8JRLFsWJxKGJAgMKrouK9zMYPxY6IN6OxeQjsjaH5bHquoU/MKXbI4CbP/eHxKLKTSkZXJpqJt9aUw7Gem9/gMFdnb8I7uG6DtCFxWw1f1bFNT5z28ja9bAOIsJt59zbDre9clqO9e+Ar+5UOvZ/stLl4ZvfsKgkFaBrYgCRgWubnQ+A+LNp0iO6AVKvHvQ1sHmCjco4OffODznzdVDn2+UkB/a2qyRrOXYqfCOjV4D+NM37b2yhrERPbrm+USE8UOezw7oWMgQKTW3mV9Rvkx+9tPR7IiK27uK7jKTr1DCIFydti6rQuSdvgDdNMP6/4pQGOpwB2O4CZ2n9BaU5i632YjnVxBIX6NbvzckKNzoUWkE0Nxj3Yl+xSb0xFo1DS/gKMmfQpy2aDq1aGRxv1DHMgAOkpgqIvlHRfGSuffG65MYFlnQSdSFUgbxBdYraRAiRhue+jK1hSK4Pf9f1SN9v+B14IxDXrD5gdvOox48MnCAbUfV2mH6x1pvGBsgL/6qktOJVdwFBfqv5Rwfyrbg6"
 }
 
 terraform {
