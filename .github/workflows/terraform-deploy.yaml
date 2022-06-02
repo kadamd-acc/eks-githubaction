@@ -18,28 +18,16 @@ jobs:
            - environment: test
              runner: windows-latest
     env:
-         AWS_ACCESS_KEY_ID: "ASIA2ZCHYB756NYSLMUR"
-         AWS_SECRET_ACCESS_KEY: "hsQJ/RR7UpybVMDO4FVSD+lCjAdVH7f3Fk0ZFfeS"
-       #  AWS_SESSION_TOKEN: "IQoJb3JpZ2luX2VjEGUaCXVzLWVhc3QtMSJIMEYCIQDnmtuTyxP2njK7PFPtR+YV8WIgDeOKLtWDjbVvxzsUzgIhAKNx+RoL5I1oqqo5cLOM7HWFvLe3/ocvUPGufAy6cHkaKq8CCF4QAhoMNzQxMDMyMzMzMzA3IgzKz/bfR4MUkhthCKoqjAK6ZLSYJvv0P6Am6hFznlTweWweIhHRJIPadSTMiU20gUY+Y3NG75w/UCaAvrcj1zw03WDJ+L0mahBDvhnhvh9sMUKPkXq8o7ZtwRl1RYVjvRA4VWekH8wXMi2WEhGS1AbR4KG6cqONxA1i4aKBuK2fENptJwTAN5s6QffEhtUyEHta5rdJ2le/7L5qY+waLB40hpY5EizhyHMmzcZvyuJidSEqHqGaiPGguTPHgbo9RIeqq1sUvac1q6CFQJr1bO7Qukf7C0TzKq5KoWHVJ2wmZrLSoR1ccTSYKsBzKvns8f7cfxf/meNz1ltHAlQgN1yozvnTto/q9sFlurOsU2X2wnc9sNwzwxPn3jLOMKnp4pQGOpwBZ+5AyWASGr45SqKk7tCzZX7zOAB/FaHOZ1N1jKBEhNtrEmdKBta8J05Y5Kx9/rOBVXS8tAGdh43el2s4cablUElSJANBzJsHrhce73JeudEDz9/bStPkd4lyYr6g/Zqk9jwc546LQOzyNfSDOEd61JIBvbDeUcfIUyOvq04XbNdueBCmAwhbzkNEiSC3JswdEVwNIwIxfqBc7CON"
+         AWS_ACCESS_KEY_ID: "ASIA2ZCHYB755DWJM4RW"
+         AWS_SECRET_ACCESS_KEY: "91HXMlpUTTO1jyl2VznQdJJrQaqa0LXtUzMuGCtp"
+         AWS_SESSION_TOKEN: "IQoJb3JpZ2luX2VjEGYaCXVzLWVhc3QtMSJHMEUCIDuhJ/PKS2MTn582EUcXeo0/g3AhCKiK2QpFmTyvAcQsAiEA3sL1+FmdWxSAQwrfyLoaJ7sREJm7ZfwiylmBDz4N29wqrwIIXxACGgw3NDEwMzIzMzMzMDciDDr3uO75RPzACTeGCSqMAvREUASF3TnR9rLju+Kc9m9Y+dJVVIs5+x7gKj0XxaJxJRtTLWrALZ/imnMAd4W5aCvh0A309Nq/rMLJ4pOCCDteCQCb8gfkLN5l6OQEI6izTJmChHVAXxHzaeZuaEfFdJk8OzGe38glQTNPT0zD1tuaVawKpoO6eqyZ3yYNZyp1pYoipf7O3zKPf0qG2FwXDBfNNsjPN+Z80TdVNcpi/ijUMS0bu2Eyewq2+lcE6mz368CukQ96YOKIYehd5cxXCFquGHnKibZwlvRqMu2OpCvF1viZA1qHhhqcSR/8RX78C4Iqf30y/2XdhVv32UIE/evqJJGblVLSvVP8RWTR1/27D+sFTysRuAT4wRYw9fPilAY6nQFF7bwO5egPcjl1q2vdDC78GvBQfoyQUH7NLX2V1vzohDW67J9ASyfzExx+cmIboB9dULI8bjhhp+PWePFB1OROrxiFAG1OgpZaXUY2157B+s29dPeYQyTEBJNgu1zCUglujdeJwThubfaLG88icaMPK1xbjyA3vZ8gw8GmSHJuBUL4yiCS4tfqCkCTMu3g3j9Pb7kkj7mRnKp14XeH"
          AWS_DEFAULT_REGION: us-east-2
     steps:
       - uses: actions/checkout@v2
       - uses: hashicorp/setup-terraform@v1
         with:
           terraform_wrapper: false
-      - name: Terraform Init
-        id: init
-        run: |
-           terraform init -upgrade=true -no-color -input=false
-      - name: Terraform Plan
-        id: plan
-        run: |
-          terraform plan -input=false  -no-color
-      - name: Terraform Apply
+       - name: Terraform destroy
         if: github.ref == 'refs/heads/master'
-        id: apply
-        run: terraform apply -auto-approve -input=false
-      - name: Terraform destroy
-        if: github.ref == 'refs/heads/destroy'
         id: destroy
         run: terraform destroy -auto-approve -input=false
