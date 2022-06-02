@@ -104,7 +104,7 @@ resource "aws_nat_gateway" "nat_gw" {
   count         = length(var.private_subnets_cidr)
   allocation_id = element(aws_eip.nat_eip.*.id, count.index)
   subnet_id     = element(aws_subnet.public_subnet.*.id, count.index)
-  depends_on    = [aws_internet_gateway.internet_gw]
+  depends_on    = [aws_internet_gateway.internet_gw,aws_eip.nat_eip]
 
   tags = {
     Name = substr("nat_gateway-${count.index + 1}-${var.cluster_name}-${var.environment}",0,64)
