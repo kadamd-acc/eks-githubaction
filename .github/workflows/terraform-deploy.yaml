@@ -20,8 +20,6 @@ jobs:
          include:
            - environment: test
              runner: ubuntu-latest
-           - environment: prod
-             runner: ubuntu-18.04
     env:
          AWS_ACCESS_KEY_ID: "ASIA2ZCHYB75YT2MMBFX"
          AWS_SECRET_ACCESS_KEY: "8/+Q+dRY67AYQAz/Reb1jm8mbrgkVG9OGAdNZ4Sj"
@@ -42,7 +40,7 @@ jobs:
         run: |
           terraform plan -input=false  -no-color
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         id: apply
         run: terraform apply -auto-approve -input=false
       - name: Terraform destroy
