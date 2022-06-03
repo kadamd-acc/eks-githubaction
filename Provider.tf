@@ -5,9 +5,9 @@
 
 provider "aws" {
   region     = var.region_name
-  access_key = "ASIA2ZCHYB7532F7IPO5"
-  secret_key = "35x2GIzb95xacoZvx8zL5kImSnTLd12qziMi527W"
-  token      = "IQoJb3JpZ2luX2VjEHsaCXVzLWVhc3QtMSJHMEUCIDLqoBPD7BQqHi4+2Nm4NdRheergE5ZjtKCozIeZlCv7AiEAsvQadFlr+QP2Fn7i8pjGgxEoOXqqY0de3lzh1dqeSJMqrwIIdBACGgw3NDEwMzIzMzMzMDciDHs5CSdcSP4edHKWGSqMAlpfCZHpXExKUSWggBd8rHcHbFii2crqHO9jgiH00t3n8TIbb6rGUfz78cxD1yszguxsGihGJHUkkTcHgt5okxug3kwCbPcmmX2X568+Yj1UF3zbmBFmgzDO8/iuqQhgShk1zBE6AVkP2Sa2SgQTjipp57S1T9+k5aLwLIjhlaW6mfoqOwlgezu7YPEFnrgCzaNY7JJS5cwj1A+4kGBH3SBbVeGMvZO5y6xqVi24vhpoXCAtKh8DicPkZWJovj9wvvfYTPP3waBVGmqi3ilOtIcgPvYa+vVgZfEYE39+pQG0lx9zHY7A/ay37+aPvRrKzT1o1vcKIG9ixdih+uvHkOCQBWeJn1lnonj7UWww1MHnlAY6nQHAjGT9u+NxXZXRmW07h678FpMbg6u/BDByNS6NEKy8AXnWECntcsPpld0uRIUqmPGtonSpS54eBCr8pgwBIM3jJGazC+nSUoDtkM7EpCM/KtfUOfoqK7wD6kk/VXB5s/YtjT6SZEZwgnLSu0QciGBkHoA1fkryj7wJeUHS4AjNVXZ8/yrp3+wrBCCuIm0bSkCcBdJqaaSfmnPIMCcm"
+  access_key = "ASIA2ZCHYB755GLYZIWQ"
+  secret_key = "ke2TZ4c7Pi1wg1cRSimV8034vFl1dP1uxakygFX8"
+  token      = "IQoJb3JpZ2luX2VjEHwaCXVzLWVhc3QtMSJHMEUCIEMRz8pFs+FLX+pT5AZBkccdj1KH/X1XJQ7kCgiuOqCaAiEA4sRTkasDh2Sc8LImj2UTXbQIDfhBegz4i3SICEH/hYQqrwIIdBACGgw3NDEwMzIzMzMzMDciDDul+R1aOef8SEyaASqMAnDMO5hHjSH+g9/IzRbzqC7sOb+7Jq8igycC/F2IR2bqzCXomJaC/lszTrYzDoA4I625eNZ0eTOzjxFDTZwY1CJbAHJPcCvZzt5JQBr7jNjH4UYNVFHLs0vc92k5pwijgjo9ew06Mq6oK1l414cL4OH5p15iMJRXmsXXlLaRBo+7zlCsecMfjnc2C0Yo0reHZV4g14t96NRLkLBhcvfBBLeVsDULc2CtkbJZSptOytuyGEEN/FBdJdMI/wIceja3htl/wP+XHI7/Jjw5J3deP6ultNqYP6q5yYZrqOu3sedEPCgeIikbIncqFF1s09GAy7LOVQJvFw7stWm1pzaWf1TFBkiobR3O3CzIEEMwk9bnlAY6nQEt6OxosMnDayhkYkMvdL3MV0ST1Ean4T2Ik+Pgwr78W50NaGiWDZWrtynejnGKNKTA4VGCMkDmjzvTJNXFWpWUe4eNWR/U8uxjGub5S0hMOA1EjKkYjrWb+7YK+YVm2dkyXdEfiF5mlmUmt7sG9FG8RVJUWug+C8JfPRQYQlls19f/pu8fr2aDiAJEzFOPaXE8wBMtJYlK/8TZSXdt"
   #
 }
 terraform {
@@ -41,7 +41,7 @@ provider "kubernetes" {
   host                   = data.aws_eks_cluster.eks_cluster.endpoint
   token                  = data.aws_eks_cluster_auth.aws_iam_authenticator.token
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks_cluster.certificate_authority[0].data)
-  config_path = "~/.kube/config"
+  config_path = "./.kube/config"
 }
 
 provider "helm" {
@@ -49,7 +49,7 @@ provider "helm" {
     host                   = data.aws_eks_cluster.eks_cluster.endpoint
     token                  = data.aws_eks_cluster_auth.aws_iam_authenticator.token
     cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks_cluster.certificate_authority[0].data)
-    config_path = "~/.kube/config"
+    config_path = "./.kube/config"
     
   }
 }
