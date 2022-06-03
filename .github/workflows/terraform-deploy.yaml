@@ -39,10 +39,10 @@ jobs:
         id: plan
         run: |
           terraform plan -input=false -var-file=${{ matrix.environment }}/terraform.tfvars -no-color
-      - name: Terraform Apply
+      - name: Terraform destroy
         if: github.ref == 'refs/heads/master'
-        id: apply
-        run: terraform apply -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
+        id: destroy
+        run: terraform destroy -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
   comment:
     runs-on: ubuntu-latest
     needs: terraform
