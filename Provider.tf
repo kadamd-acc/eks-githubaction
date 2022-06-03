@@ -5,10 +5,7 @@
 
 provider "aws" {
   region     = var.region_name
-  access_key = "ASIA2ZCHYB752I446UMS"
-  secret_key = "tAEvqJ3fUP1vctJ9S3zwGviq2vUzVJurINLmAP6D"
-  token      = "IQoJb3JpZ2luX2VjEH0aCXVzLWVhc3QtMSJHMEUCICAsoa1f/KB6g9glt/YGlDOd9FLKBluHli564ICTuhSWAiEArrvaOD4AvJ+glSta8w9YwBaiUSkL9FJtGhShcq9gYeoqrwIIdhACGgw3NDEwMzIzMzMzMDciDEZvyq1YojvIk30ksyqMAue6qSMflkwQLmQsxdfsrrAbab5za67h6GSwRLyKNLywXddxEMnhR4kOuudDngn21D1lPXr3zYgVX0TKL9wRGKZU5s/gJFb4N5/H0oLvuj4yLtusY4Y9XWuk+TaN8Q6HNSWoIIkzMY8f6I+yC5BHGXgZthFaLTMCTa4cSzJmOFLXjaQb9DHq0j/WV81Unzax2YktoKrlLZ0/mf1f/rLmN6gUSeOLycM5SPEjudXuoQkweCuFJ3v2fn6mvOlkV9GUj8ZNS8Dmhebd20Z1gdU1fXnQ8DYHeqQoaOd68HaoDZjQAlhDZnijGVS4xDjR5DQm//2YJ4JtnunEwKSEE8xpxkKy6pVesW1kccbWqVswnfrnlAY6nQGhFTq6JIywb77WSJvrRRbUdVhLIaEehod/Qzoj64JrTxKB8msUXHZdUqL61LagsdiSygjpQ2J8qVhgmK+wRw9bOyYXBatJy0VbDXjZDZgSXsNBaBJVR3tHDlbbznqld72E3z7511c+QspDOfBub3jOoCB3CM0JgQjlXhPvptkt8YzQRHYOAZTvMiqgBvc93FwcjzikvlPgPdSL5Hn9"
-  #
+
 }
 terraform {
   backend "s3" {
