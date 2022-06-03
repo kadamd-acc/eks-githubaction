@@ -5,20 +5,20 @@
 
 provider "aws" {
   region     = var.region_name
-  access_key = "ASIA2ZCHYB75VO2U4XO7"
-  secret_key = "JmMYgjejR6TC6efFjbnqkjEjXa05gCaR32e618of"
-  token      = "IQoJb3JpZ2luX2VjEHoaCXVzLWVhc3QtMSJGMEQCIEOSbGmLVG+1q/QHsNbqtS/qLjSeTcAXdBegwnrZMhVuAiALeTnBmuVEkoAIc4j3wuZDFEm8oJszYaQbMvNQu6VCIiqvAghyEAIaDDc0MTAzMjMzMzMwNyIMOPmXIBXpUPwAKMBqKowC3XRcW3E7WR07tG6nLPtYVp/0xElAlnYneHXFCxTrft6VUjiXSxAPwwYIvnKOf70DzZB2ZD8bVl1sVFjwdiK1Psv5dylkHKWiYgnkpCJ08xeKIWxQNWl0Md3mXuOBZOcltFzAdCwc4FThgpWXrBWJNMDOWJ3jAGDGsJ9nfhiApvmP+mRUYaXGUVggLZv8DHbrItBePvfj6HGbLEWFAPd7WZNWZg/OKbhsoHaAiQ8v3CrQLdHHcAJFoMFsbnzLjM7QwhEK2BZaEZDNEi8cHNrn03sk5yDYP6UDUe56EssSY7wIt2MG33H1OorRpjXJcRlkSrquySqkymfXodmZF2HEmQXUzGB6z4E73lcBtDDJnueUBjqeAQ8GpO0nZpYLL41MEfBtEIwTEeJqnhDID62KkWFvpEWbV5ADHwcxVXlJ1/PBMoi3nObC++iqtQ0rb/UwMOTE7wJyKDduJJ+SH2qBrdih+NMZFoCkCmf8MSo5EhKnZ3acJutnwQsBjFIdFTdvcOzYsjzItv+EOoG33WH9kcfTnsWo4Cr0wwQ4WgM0VB4yrQtuAzNf5edCNoMpKWqrEgaq"
+  access_key = "ASIA2ZCHYB7532F7IPO5"
+  secret_key = "35x2GIzb95xacoZvx8zL5kImSnTLd12qziMi527W"
+  token      = "IQoJb3JpZ2luX2VjEHsaCXVzLWVhc3QtMSJHMEUCIDLqoBPD7BQqHi4+2Nm4NdRheergE5ZjtKCozIeZlCv7AiEAsvQadFlr+QP2Fn7i8pjGgxEoOXqqY0de3lzh1dqeSJMqrwIIdBACGgw3NDEwMzIzMzMzMDciDHs5CSdcSP4edHKWGSqMAlpfCZHpXExKUSWggBd8rHcHbFii2crqHO9jgiH00t3n8TIbb6rGUfz78cxD1yszguxsGihGJHUkkTcHgt5okxug3kwCbPcmmX2X568+Yj1UF3zbmBFmgzDO8/iuqQhgShk1zBE6AVkP2Sa2SgQTjipp57S1T9+k5aLwLIjhlaW6mfoqOwlgezu7YPEFnrgCzaNY7JJS5cwj1A+4kGBH3SBbVeGMvZO5y6xqVi24vhpoXCAtKh8DicPkZWJovj9wvvfYTPP3waBVGmqi3ilOtIcgPvYa+vVgZfEYE39+pQG0lx9zHY7A/ay37+aPvRrKzT1o1vcKIG9ixdih+uvHkOCQBWeJn1lnonj7UWww1MHnlAY6nQHAjGT9u+NxXZXRmW07h678FpMbg6u/BDByNS6NEKy8AXnWECntcsPpld0uRIUqmPGtonSpS54eBCr8pgwBIM3jJGazC+nSUoDtkM7EpCM/KtfUOfoqK7wD6kk/VXB5s/YtjT6SZEZwgnLSu0QciGBkHoA1fkryj7wJeUHS4AjNVXZ8/yrp3+wrBCCuIm0bSkCcBdJqaaSfmnPIMCcm"
+  #
 }
-#
-#terraform {
-#  backend "s3" {
-#    bucket = "landg-terraform-state"
-#    key    = "eks/test/terraform.tfstate"
-#    region = "eu-west-2"
-#    encrypt= true
-#
-#  }
-#}
+terraform {
+  backend "s3" {
+    bucket = "landg-terraform-state"
+    key    = "eks/test/terraform.tfstate"
+    region = "eu-west-2"
+    encrypt= true
+
+  }
+}
 ##
 #resource "aws_s3_bucket" "terraform-state" {
 #  bucket = "landg-terraform-state"
