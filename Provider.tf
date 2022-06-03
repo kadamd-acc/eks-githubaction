@@ -1,14 +1,14 @@
-provider "aws" {
-  region = "var.region_name"
-  profile = "var.user_profile"
-}
-
 #provider "aws" {
-#  region     = var.region_name
-#  access_key = "ASIA2ZCHYB756H3JX54Y"
-#  secret_key = "VK50j/+hXnWdpDNRe/y49N7yEzlVmQbmWYNad8LK"
-#  token      = "IQoJb3JpZ2luX2VjEHYaCXVzLWVhc3QtMSJHMEUCIQDC/eMxmHY0uaH+Hf9u4iiufcPizjTRWrXtnAVafUpTkAIgBt7EZntZudm7zRM4GnKXhzrFfLXbkDtUmzCta+gQKPEqrwIIbxACGgw3NDEwMzIzMzMzMDciDNKb6KIuuFJsv7DlOiqMAj8ScqSpr0rVYDsK6a7cpruHfhmyePmOQlakQEAJTahK/eLtUd3VhtWbwVDEX0lSURC56BpPrrL0o9QgAhOvlBPRtF+m8wxYTuRY1uZHsif3CUAKl1NuHTKUlqg/biAlDhx6iNsHCKrmru1ctzYZrduKB4MNQT1NMmRqusaFRG2YaF5pEcrZqqWSmi65sohQE82V5DJfy2oTIkAT2K8cwo6LJ6z+uGbFR2NmtmojWMdWsHjRM2P7OqUIzP/QX+6dHEilrOffh5v6dUeruL5YBcdJ/PaClYw4AcP6eaKWOupDg7ZK+Qt3s3SNVGPnFT4whFEuGDY1vLAEa+LJI/9qnk0QAXEjr7dRrEFXH4Mw7rXmlAY6nQG3zHfuw64cwojiMK44bvVsbXyYbRbMtk3lZD+Solgm/ALkTR+MZ/UfnhpdpxG06x3wtR1O/V/UKOlrq/AWzdi65dUCSMYN1aQbOfgIO69eco5hdPdC+QfMRRhzACD5UBRk7H5nB45/tcYsX5j+QPfErFCTuCRgVAs6ML9BOzLJiyCZVz2hXp8ELKT+2Eq1GA34/3/tcTpcT/qmU6hG"
+#  region = "var.region_name"
+#  profile = "AWS_741032333307_User"
 #}
+
+provider "aws" {
+  region     = var.region_name
+  access_key = "ASIA2ZCHYB75VO2U4XO7"
+  secret_key = "JmMYgjejR6TC6efFjbnqkjEjXa05gCaR32e618of"
+  token      = "IQoJb3JpZ2luX2VjEHoaCXVzLWVhc3QtMSJGMEQCIEOSbGmLVG+1q/QHsNbqtS/qLjSeTcAXdBegwnrZMhVuAiALeTnBmuVEkoAIc4j3wuZDFEm8oJszYaQbMvNQu6VCIiqvAghyEAIaDDc0MTAzMjMzMzMwNyIMOPmXIBXpUPwAKMBqKowC3XRcW3E7WR07tG6nLPtYVp/0xElAlnYneHXFCxTrft6VUjiXSxAPwwYIvnKOf70DzZB2ZD8bVl1sVFjwdiK1Psv5dylkHKWiYgnkpCJ08xeKIWxQNWl0Md3mXuOBZOcltFzAdCwc4FThgpWXrBWJNMDOWJ3jAGDGsJ9nfhiApvmP+mRUYaXGUVggLZv8DHbrItBePvfj6HGbLEWFAPd7WZNWZg/OKbhsoHaAiQ8v3CrQLdHHcAJFoMFsbnzLjM7QwhEK2BZaEZDNEi8cHNrn03sk5yDYP6UDUe56EssSY7wIt2MG33H1OorRpjXJcRlkSrquySqkymfXodmZF2HEmQXUzGB6z4E73lcBtDDJnueUBjqeAQ8GpO0nZpYLL41MEfBtEIwTEeJqnhDID62KkWFvpEWbV5ADHwcxVXlJ1/PBMoi3nObC++iqtQ0rb/UwMOTE7wJyKDduJJ+SH2qBrdih+NMZFoCkCmf8MSo5EhKnZ3acJutnwQsBjFIdFTdvcOzYsjzItv+EOoG33WH9kcfTnsWo4Cr0wwQ4WgM0VB4yrQtuAzNf5edCNoMpKWqrEgaq"
+}
 #
 #terraform {
 #  backend "s3" {

@@ -2,7 +2,7 @@
 
 
 module "vpc" {
-    source                              = "./vpc"
+    source                              = "./modules/vpc"
     environment                         =  var.environment
     vpc_cidr                            =  var.vpc_cidr
     vpc_name                            =  var.vpc_name
@@ -19,7 +19,7 @@ module "vpc" {
 
 
 module "eks" {
-    source                              =  "./eks"
+    source                              =  "./modules/eks"
     cluster_name                        =  var.cluster_name
     cluster_version                     =  var.cluster_version
     environment                         =  var.environment
@@ -34,7 +34,7 @@ module "eks" {
 
 
 module "coredns_patching" {
-  source  = "./coredns-patch"
+  source  = "./modules/coredns-patch"
 
   k8s_cluster_type = var.cluster_type
   k8s_namespace    = "kube-system"
@@ -49,7 +49,7 @@ module "coredns_patching" {
 #
 #
 module "aws_alb_controller" {
-  source  = "./aws-lb-controller"
+  source  = "./modules/aws-lb-controller"
   k8s_cluster_type = var.cluster_type
   k8s_namespace    = "kube-system"
   k8s_cluster_name = module.eks.eks_cluster_name
@@ -58,7 +58,7 @@ module "aws_alb_controller" {
 }
 #
 module "eks_kubernetes_addons" {
-  source         = "./kubernetes-addons"
+  source         = "./modules/kubernetes-addons"
  # eks_cluster_id = module.eks.eks_cluster_id
 
   # EKS Managed Add-ons
@@ -72,7 +72,7 @@ module "eks_kubernetes_addons" {
 }
 #
 #module "kubernetes_app" {
-#    source                      =  "./kubernetes-app"
+#    source                      =  "./modules/kubernetes-app"
 #    app_namespace               =  var.fargate_app_namespace[0]
 #
 #  depends_on = [module.eks, module.aws_alb_controller]

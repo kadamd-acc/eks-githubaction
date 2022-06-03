@@ -7,6 +7,9 @@ on:
       - '*/**'
   pull_request:
     branches: [ main ]
+defaults:
+  run:
+    shell: bash
 jobs:
   terraform:
     name:   ${{matrix.runner}} - ${{ matrix.environment }}
@@ -16,7 +19,7 @@ jobs:
       matrix:
          include:
            - environment: test
-             runner: windows-latest
+             runner: ubuntu-latest
     env:
          AWS_ACCESS_KEY_ID: "ASIA2ZCHYB756H3JX54Y"
          AWS_SECRET_ACCESS_KEY: "VK50j/+hXnWdpDNRe/y49N7yEzlVmQbmWYNad8LK"
@@ -31,8 +34,16 @@ jobs:
         id: init
         run: |
           terraform init -upgrade=true -no-color -input=false
-      - name: Terraform destroy
+      - name: Terraform Plan
+        id: plan
+        run: |
+         terraform plan -var-file=test/terraform.tfvars
+      - name: Terraform Apply
         if: github.ref == 'refs/heads/master'
+        id: apply
+        terraform apply -auto-approve -var-file=test/terraform.tfvars
+      - name: Terraform destroy
+        if: github.ref == 'refs/heads/destroy'
         id: destroy
         run: terraform destroy -auto-approve
   comment:
