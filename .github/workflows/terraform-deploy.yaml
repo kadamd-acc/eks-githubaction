@@ -1,0 +1,42 @@
+name: terraform deployment
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '*/**'
+  pull_request:
+    branches: [ main ]
+jobs:
+  terrafrom:
+    name:
+    runs-on:
+    strategy:
+      max-parallel: 1
+      matrix:
+        include:
+          - environment: test
+            runner: windows-latest
+    env:
+         AWS_ACCESS_KEY_ID: "ASIA2ZCHYB75XBEDD35W"
+         AWS_SECRET_ACCESS_KEY: "4B8CVIjm7SdvXRPstN06TIfr7D2aKo0mF9W0ehT+"
+         AWS_SESSION_TOKEN: "IQoJb3JpZ2luX2VjEHUaCXVzLWVhc3QtMSJHMEUCIQD9bePmeiJPb4BRkze6knZaJC2e/UD8YRk+ehsowsyS0gIgXSvowvXhskfG/jNyVWYCP/DDNu/Y2ViFQ+j5ztp8bpoqrwIIbRACGgw3NDEwMzIzMzMzMDciDLjGaxVGGtZJcEmtOCqMAsXhY4+udiFP90dx7kATHCD1cExCliCfd6k/cv3D2Qfu31gCfwMvy665c/d0FPzkXTqyeLFMt6K8fIlsKixj3eJ6D7IdRyYGjYtj6U31PSQZtSPodCu3TyGLPXPiO1duNyP2hydgta0NZ2JhGsLno6LQKNkHE9yCzsh0fTzk+0lW+IInsoBPf+mhDX9OxMM9zVGNr0ZWUYJ3da4GdWEu7zxW3/uwI4Yp/gEAv0sKBUU9cHHoL6UfB5pHFJ53EqWMeUuY2HrabcekPjxIkcMTe42zIeKzamDHfgVaHnYSwFkvADB/2ee5L83hdpKO8OOxpRSSeSKMqo9JlRFdCyuQnSzHa9pZH95ARGVGxNQw8ZLmlAY6nQH7fTEV3hVYSnA7hQ2TpPN12XeNV/4gsfxwPbgST0f8Z3K2GiJygEreE4c81WkBpMLMsbYp3Skr+4xpW2CkWuNI4kw3I1dpphZcSjgoiJ936qRB9AdyozdZy0fIwo5BIO2VyjOowHfSGfxiXw92PqlWRglcEePjfdDc/SfgKwaW7OaC9UmuYhE3OIwN6hYGvhZYCo4CknpYmF0xHvbj"
+         AWS_DEFAULT_REGION: us-east-2
+    steps:
+      - uses: action/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_wrapper: false
+      - name: Terraform Init
+        id: init
+        run: |
+          del .terraform
+          terraform init -upgrade=true -no-color -input=false
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform plan -input=false -var-file=terraform.tfvars -no-color
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        id: apply
+        run: terraform apply -auto-approve -input=false -var-file=terraform.tfvars
+

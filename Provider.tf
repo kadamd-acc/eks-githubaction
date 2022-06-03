@@ -2,7 +2,9 @@
 
 provider "aws" {
   region     = var.region_name
-  profile = var.user_profile
+  access_key = "ASIA2ZCHYB75XBEDD35W"
+  secret_key = "4B8CVIjm7SdvXRPstN06TIfr7D2aKo0mF9W0ehT+"
+  token      = "IQoJb3JpZ2luX2VjEHUaCXVzLWVhc3QtMSJHMEUCIQD9bePmeiJPb4BRkze6knZaJC2e/UD8YRk+ehsowsyS0gIgXSvowvXhskfG/jNyVWYCP/DDNu/Y2ViFQ+j5ztp8bpoqrwIIbRACGgw3NDEwMzIzMzMzMDciDLjGaxVGGtZJcEmtOCqMAsXhY4+udiFP90dx7kATHCD1cExCliCfd6k/cv3D2Qfu31gCfwMvy665c/d0FPzkXTqyeLFMt6K8fIlsKixj3eJ6D7IdRyYGjYtj6U31PSQZtSPodCu3TyGLPXPiO1duNyP2hydgta0NZ2JhGsLno6LQKNkHE9yCzsh0fTzk+0lW+IInsoBPf+mhDX9OxMM9zVGNr0ZWUYJ3da4GdWEu7zxW3/uwI4Yp/gEAv0sKBUU9cHHoL6UfB5pHFJ53EqWMeUuY2HrabcekPjxIkcMTe42zIeKzamDHfgVaHnYSwFkvADB/2ee5L83hdpKO8OOxpRSSeSKMqo9JlRFdCyuQnSzHa9pZH95ARGVGxNQw8ZLmlAY6nQH7fTEV3hVYSnA7hQ2TpPN12XeNV/4gsfxwPbgST0f8Z3K2GiJygEreE4c81WkBpMLMsbYp3Skr+4xpW2CkWuNI4kw3I1dpphZcSjgoiJ936qRB9AdyozdZy0fIwo5BIO2VyjOowHfSGfxiXw92PqlWRglcEePjfdDc/SfgKwaW7OaC9UmuYhE3OIwN6hYGvhZYCo4CknpYmF0xHvbj"
 }
 
 terraform {
