@@ -20,6 +20,8 @@ jobs:
          include:
            - environment: test
              runner: ubuntu-latest
+           - environment: prod
+             runner: ubuntu-18.04
     env:
          AWS_ACCESS_KEY_ID: "ASIA2ZCHYB7532F7IPO5"
          AWS_SECRET_ACCESS_KEY: "35x2GIzb95xacoZvx8zL5kImSnTLd12qziMi527W"
@@ -33,19 +35,20 @@ jobs:
       - name: Terraform Init
         id: init
         run: |
-          terraform init -upgrade=true -no-color -input=false
+           rm -rf .terraform
+           terraform init
       - name: Terraform Plan
         id: plan
         run: |
-         terraform plan -var-file=test/terraform.tfvars
+          terraform plan -input=false -var-file=${{ matrix.environment }}/terraform.tfvars -no-color
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master'
         id: apply
-        terraform apply -auto-approve -var-file=test/terraform.tfvars
+        run: terraform apply -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
       - name: Terraform destroy
         if: github.ref == 'refs/heads/destroy'
         id: destroy
-        run: terraform destroy -auto-approve
+        run: terraform destroy -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
   comment:
     runs-on: ubuntu-latest
     needs: terraform
