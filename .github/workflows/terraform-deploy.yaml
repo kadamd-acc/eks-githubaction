@@ -27,20 +27,8 @@ jobs:
       - uses: hashicorp/setup-terraform@v1
         with:
           terraform_wrapper: false
-      - name: Terraform Init
-        id: init
-        run: |
-          terraform init -upgrade=true -no-color -input=false
-      - name: Terraform Plan
-        id: plan
-        run: |
-          terraform plan
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/master'
-        id: apply
-        run: terraform apply -auto-approve
       - name: Terraform destroy
-        if: github.ref == 'refs/heads/destroy'
+        if: github.ref == 'refs/heads/master'
         id: destroy
         run: terraform destroy -auto-approve
   comment:
