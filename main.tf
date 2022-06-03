@@ -63,8 +63,8 @@ module "eks_kubernetes_addons" {
 
   # EKS Managed Add-ons
   enable_amazon_eks_vpc_cni    = true
-  enable_amazon_eks_coredns    = true
-  enable_amazon_eks_kube_proxy = true
+ # enable_amazon_eks_coredns    = true
+ # enable_amazon_eks_kube_proxy = true
   k8s_cluster_type = var.cluster_type
   k8s_namespace    = "kube-system"
   k8s_cluster_name = module.eks.eks_cluster_name
