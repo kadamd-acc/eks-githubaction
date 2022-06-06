@@ -16,5 +16,6 @@ availability_zones_private   =  ["eu-west-2a", "eu-west-2b", "eu-west-2c"]
 cidr_block_internet_gw       =  "0.0.0.0/0"
 cidr_block_nat_gw            =  "0.0.0.0/0"
 fargate_app_namespace        =  ["ns-fargate-app", "ns-fargate-app2"]
-
+aws_access_key               = "ENTER-YOUR-ACCESS-KEY-HERE"
+aws_secret_key               = "ENTER-YOUR-SECRET-KEY-HERE"
 
