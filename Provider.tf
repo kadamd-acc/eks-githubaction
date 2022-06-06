@@ -6,6 +6,7 @@
 provider "aws" {
   region     = var.region_name
 }
+
 terraform {
   backend "s3" {
     bucket = "landg-terraform-state"
