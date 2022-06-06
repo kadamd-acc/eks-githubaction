@@ -45,7 +45,7 @@ resource "aws_iam_role_policy_attachment" "vpc-cni-addon" {
 }
 
 resource "kubernetes_service_account" "this" {
-  automount_service_account_token = true
+ # automount_service_account_token = true
   metadata {
     name      = "aws-load-balancer-controller"
     namespace = var.k8s_namespace
