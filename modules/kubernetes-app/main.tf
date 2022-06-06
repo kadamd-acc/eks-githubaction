@@ -67,36 +67,36 @@ resource "kubernetes_service_v1" "game-app-service" {
 
 
 
-#resource "kubernetes_ingress_v1" "game-app-ingress" {
-#  wait_for_load_balancer = true
-#  metadata {
-#    name = "game-app-ingress"
-#    namespace = kubernetes_namespace.application_namespace.metadata.0.name
-#    annotations = {
-#      "kubernetes.io/ingress.class"           = "alb"
-#      "alb.ingress.kubernetes.io/scheme"      = "internet-facing"
-#      "alb.ingress.kubernetes.io/target-type" = "ip"
-#    }
-#  }
-#  spec {
-#    rule {
-#      http {
-#        path {
-#          path = "/*"
-#          backend {
-#            service {
-#              name = kubernetes_service_v1.game-app-service.metadata.0.name
-#              port {
-#                number = 80
-#              }
-#            }
-#          }
-#        }
-#      }
-#    }
-#  }
-#  depends_on = [
-#    kubernetes_service_v1.game-app-service
-#  ]
-#}
-#
+resource "kubernetes_ingress_v1" "game-app-ingress" {
+  wait_for_load_balancer = true
+  metadata {
+    name = "game-app-ingress"
+    namespace = kubernetes_namespace.application_namespace.metadata.0.name
+    annotations = {
+      "kubernetes.io/ingress.class"           = "alb"
+      "alb.ingress.kubernetes.io/scheme"      = "internet-facing"
+      "alb.ingress.kubernetes.io/target-type" = "ip"
+    }
+  }
+  spec {
+    rule {
+      http {
+        path {
+          path = "/*"
+          backend {
+            service {
+              name = kubernetes_service_v1.game-app-service.metadata.0.name
+              port {
+                number = 80
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  depends_on = [
+    kubernetes_service_v1.game-app-service
+  ]
+}
+
