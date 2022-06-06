@@ -21,7 +21,7 @@ jobs:
            - environment: test
              runner: ubuntu-latest
     env:
-        
+
     steps:
       - uses: actions/checkout@v2
       - uses: hashicorp/setup-terraform@v1
