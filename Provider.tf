@@ -33,45 +33,48 @@ terraform {
 #  }
 #
 #}
-#provider "kubernetes" {
-#  host                   = data.aws_eks_cluster.eks_cluster.endpoint
-#  token                  = data.aws_eks_cluster_auth.aws_iam_authenticator.token
-#  cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks_cluster.certificate_authority[0].data)
-#  #config_path = "./.kube/config"
-#}
-#
-#provider "helm" {
-#  kubernetes {
-#    host                   = data.aws_eks_cluster.eks_cluster.endpoint
-#    token                  = data.aws_eks_cluster_auth.aws_iam_authenticator.token
-#    cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks_cluster.certificate_authority[0].data)
-#    #config_path = "./.kube/config"
-#
-#  }
-#}
 
 provider "kubernetes" {
   host                   = data.aws_eks_cluster.eks_cluster.endpoint
+  token                  = data.aws_eks_cluster_auth.aws_iam_authenticator.token
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks_cluster.certificate_authority[0].data)
-
-  exec {
-    api_version = "client.authentication.k8s.io/v1alpha1"
-    command     = "aws"
-    # This requires the awscli to be installed locally where Terraform is executed
-    args = ["eks", "get-token", "--cluster-name", data.aws_eks_cluster.eks_cluster.id]
-  }
+  config_context =  data.aws_eks_cluster.eks_cluster.arn
+  config_path = "/home/runner/.kube/config"
 }
 
 provider "helm" {
   kubernetes {
     host                   = data.aws_eks_cluster.eks_cluster.endpoint
+    token                  = data.aws_eks_cluster_auth.aws_iam_authenticator.token
     cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks_cluster.certificate_authority[0].data)
+    config_context =  data.aws_eks_cluster.eks_cluster.arn 
+    config_path = "/home/runner/.kube/config"
 
-    exec {
-      api_version = "client.authentication.k8s.io/v1alpha1"
-      command     = "aws"
-      # This requires the awscli to be installed locally where Terraform is executed
-      args = ["eks", "get-token", "--cluster-name", data.aws_eks_cluster.eks_cluster.id]
-    }
   }
 }
+#
+#provider "kubernetes" {
+#  host                   = data.aws_eks_cluster.eks_cluster.endpoint
+#  cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks_cluster.certificate_authority[0].data)
+#
+#  exec {
+#    api_version = "client.authentication.k8s.io/v1alpha1"
+#    command     = "aws"
+#    # This requires the awscli to be installed locally where Terraform is executed
+#    args = ["eks", "get-token", "--cluster-name", data.aws_eks_cluster.eks_cluster.id]
+#  }
+#}
+#
+#provider "helm" {
+#  kubernetes {
+#    host                   = data.aws_eks_cluster.eks_cluster.endpoint
+#    cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks_cluster.certificate_authority[0].data)
+#
+#    exec {
+#      api_version = "client.authentication.k8s.io/v1alpha1"
+#      command     = "aws"
+#      # This requires the awscli to be installed locally where Terraform is executed
+#      args = ["eks", "get-token", "--cluster-name", data.aws_eks_cluster.eks_cluster.id]
+#    }
+#  }
+#}
