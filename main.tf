@@ -47,29 +47,29 @@ module "coredns_patching" {
 
 #
 #
-module "aws_alb_controller" {
-  source  = "./modules/aws-lb-controller"
-  k8s_cluster_type = var.cluster_type
-  k8s_namespace    = "kube-system"
-  k8s_cluster_name = module.eks.eks_cluster_name
- # alb_controller_depends_on =  ""
-  depends_on = [module.eks, module.coredns_patching]
-}
+#module "aws_alb_controller" {
+#  source  = "./modules/aws-lb-controller"
+#  k8s_cluster_type = var.cluster_type
+#  k8s_namespace    = "kube-system"
+#  k8s_cluster_name = module.eks.eks_cluster_name
+# # alb_controller_depends_on =  ""
+#  depends_on = [module.eks, module.coredns_patching]
+#}
+##
+#module "eks_kubernetes_addons" {
+#  source         = "./modules/kubernetes-addons"
+#  enable_amazon_eks_vpc_cni    = true
+#  k8s_cluster_type = var.cluster_type
+#  k8s_namespace    = "kube-system"
+#  k8s_cluster_name = module.eks.eks_cluster_name
+#  depends_on = [module.aws_alb_controller]
+#}
+##
+#module "kubernetes_app" {
+#    source                      =  "./modules/kubernetes-app"
+#    app_namespace               =  var.fargate_app_namespace[0]
 #
-module "eks_kubernetes_addons" {
-  source         = "./modules/kubernetes-addons"
-  enable_amazon_eks_vpc_cni    = true
-  k8s_cluster_type = var.cluster_type
-  k8s_namespace    = "kube-system"
-  k8s_cluster_name = module.eks.eks_cluster_name
-  depends_on = [module.aws_alb_controller]
-}
+#  depends_on = [module.eks, module.aws_alb_controller]
+#}
 #
-module "kubernetes_app" {
-    source                      =  "./modules/kubernetes-app"
-    app_namespace               =  var.fargate_app_namespace[0]
-
-  depends_on = [module.eks, module.aws_alb_controller]
-}
-
 
