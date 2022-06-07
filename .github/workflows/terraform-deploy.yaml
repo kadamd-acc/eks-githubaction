@@ -21,9 +21,19 @@ jobs:
            - environment: test
              runner: ubuntu-latest
     env:
-
+         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+         AWS_TOKEN: ${{ secrets.AWS_TOKEN }}
+         AWS_DEFAULT_REGION: eu-west-1
     steps:
       - uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_TOKEN }}
+          aws-region: eu-west-1
       - uses: hashicorp/setup-terraform@v1
         with:
           terraform_wrapper: false
@@ -38,7 +48,7 @@ jobs:
           terraform plan -input=false -var-file=${{ matrix.environment }}/terraform.tfvars -no-color
       - name: Terraform apply
         if: github.ref == 'refs/heads/master'
-        id: destroy
+        id: apply
         run: terraform apply -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
   comment:
     runs-on: ubuntu-latest
