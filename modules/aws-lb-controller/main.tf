@@ -1,3 +1,4 @@
+
 locals {
   alb_controller_helm_repo     = "https://aws.github.io/eks-charts"
   alb_controller_chart_name    = "aws-load-balancer-controller"
@@ -20,7 +21,6 @@ resource "aws_iam_role" "this" {
   assume_role_policy = var.k8s_cluster_type == "vanilla" ? data.aws_iam_policy_document.ec2_assume_role[0].json : data.aws_iam_policy_document.eks_oidc_assume_role[0].json
 }
 
-
 resource "aws_iam_policy" "this" {
   name        = substr("${var.aws_resource_name_prefix}${var.k8s_cluster_name}-alb-management",0,64)
   description = format("Permissions that are required to manage AWS Application Load Balancers.")
@@ -39,10 +39,7 @@ resource "aws_iam_role_policy_attachment" "this" {
   role       = aws_iam_role.this.name
 }
 
-resource "aws_iam_role_policy_attachment" "vpc-cni-addon" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  role       =  aws_iam_role.this.name
-}
+
 
 
 resource "kubernetes_cluster_role" "this" {
