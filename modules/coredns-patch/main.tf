@@ -6,15 +6,15 @@
 # Running PowerShell command in Windows OS
 
 ## Updating Kubeconfig file with EKS cluster details
-#resource "null_resource" "update_kubeconfig_windows" {
-#  count = (var.user_os == "windows" && var.k8s_cluster_type == "eks") ? 1 : 0
-#  provisioner "local-exec" {
-#    interpreter = ["PowerShell", "-Command"]
-#    command     = <<EOF
-#    aws eks update-kubeconfig --region '${data.aws_region.current.name}' --name '${data.aws_eks_cluster.selected[0].name}' --profile '${var.user_profile}'
-#EOF
-#  }
-#}
+resource "null_resource" "update_kubeconfig_windows" {
+ count = (var.user_os == "linux" && var.k8s_cluster_type == "eks") ? 1 : 0
+ provisioner "local-exec" {
+   interpreter = ["/bin/bash", "-Command"]
+   command     = <<EOF
+   aws eks update-kubeconfig --region '${data.aws_region.current.name}' --name '${data.aws_eks_cluster.selected[0].name}' --profile '${var.user_profile}'
+EOF
+ }
+}
 #
 ## Patching CoreDNS to remove EC2 annotations
 #resource "null_resource" "coredns_patch_windows" {
