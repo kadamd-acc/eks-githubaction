@@ -1,4 +1,3 @@
-
 locals {
   alb_controller_helm_repo     = "https://aws.github.io/eks-charts"
   alb_controller_chart_name    = "aws-load-balancer-controller"
@@ -21,6 +20,7 @@ resource "aws_iam_role" "this" {
   assume_role_policy = var.k8s_cluster_type == "vanilla" ? data.aws_iam_policy_document.ec2_assume_role[0].json : data.aws_iam_policy_document.eks_oidc_assume_role[0].json
 }
 
+
 resource "aws_iam_policy" "this" {
   name        = substr("${var.aws_resource_name_prefix}${var.k8s_cluster_name}-alb-management",0,64)
   description = format("Permissions that are required to manage AWS Application Load Balancers.")
@@ -39,8 +39,29 @@ resource "aws_iam_role_policy_attachment" "this" {
   role       = aws_iam_role.this.name
 }
 
+resource "aws_iam_role_policy_attachment" "vpc-cni-addon" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+  role       =  aws_iam_role.this.name
+}
 
-
+resource "kubernetes_service_account" "this" {
+  automount_service_account_token = true
+  metadata {
+    name      = "aws-load-balancer-controller"
+    namespace = var.k8s_namespace
+    annotations = {
+      # This annotation is only used when running on EKS which can
+      # use IAM roles for service accounts.
+      "eks.amazonaws.com/role-arn" = aws_iam_role.this.arn
+    }
+    labels = {
+      "app.kubernetes.io/name"       = "aws-load-balancer-controller"
+      "app.kubernetes.io/component"  = "controller"
+      "app.kubernetes.io/managed-by" = "terraform"
+    }
+  }
+  depends_on = [var.alb_controller_depends_on]
+}
 
 resource "kubernetes_cluster_role" "this" {
   metadata {
@@ -117,32 +138,12 @@ resource "kubernetes_cluster_role_binding" "this" {
   }
 
   subject {
+    api_group = ""
     kind      = "ServiceAccount"
     name      = kubernetes_service_account.this.metadata[0].name
     namespace = kubernetes_service_account.this.metadata[0].namespace
   }
-  depends_on = [kubernetes_cluster_role.this]
 }
-
-resource "kubernetes_service_account" "this" {
-  automount_service_account_token = true
-  metadata {
-    name      = "aws-load-balancer-controller"
-    namespace = var.k8s_namespace
-    annotations = {
-      # This annotation is only used when running on EKS which can
-      # use IAM roles for service accounts.
-      "eks.amazonaws.com/role-arn" = aws_iam_role.this.arn
-    }
-    labels = {
-      "app.kubernetes.io/name"       = "aws-load-balancer-controller"
-      "app.kubernetes.io/component"  = "controller"
-      "app.kubernetes.io/managed-by" = "terraform"
-    }
-  }
-  depends_on = [aws_iam_role.this]
-}
-
 
 resource "helm_release" "alb_controller" {
 
@@ -178,7 +179,7 @@ resource "helm_release" "alb_controller" {
     }
   }
 
-  depends_on = [kubernetes_cluster_role_binding.this]
+  depends_on = [var.alb_controller_depends_on]
 }
 
 
@@ -208,7 +209,6 @@ data "template_file" "kubeconfig" {
         token: ${data.aws_eks_cluster_auth.selected[0].token}
   EOF
 }
-
 # Since the kubernetes_provider cannot yet handle CRDs, we need to set any
 # supplied TargetGroupBinding using a null_resource.
 #
@@ -221,7 +221,6 @@ data "template_file" "kubeconfig" {
 # https://github.com/hashicorp/terraform/issues/23679#issuecomment-886020367
 resource "null_resource" "supply_target_group_arns" {
   count = (length(var.target_groups) > 0) ? length(var.target_groups) : 0
-
   triggers = {
     kubeconfig  = base64encode(data.template_file.kubeconfig.rendered)
     cmd_create  = <<-EOF
@@ -240,7 +239,6 @@ resource "null_resource" "supply_target_group_arns" {
     EOF
     cmd_destroy = "kubectl -n ${var.k8s_namespace} --kubeconfig <(echo $KUBECONFIG | base64 --decode) delete TargetGroupBinding ${lookup(var.target_groups[count.index], "name", "")}-tgb"
   }
-
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
     environment = {
