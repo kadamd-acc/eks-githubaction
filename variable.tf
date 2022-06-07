@@ -31,4 +31,6 @@ variable "user_os" {
   description = "Operating system used by user to execute Terraform, Kubectl, aws commands. e.g. \"windows\" or \"linux\""
 }
 
-
+variable "access_key" {}
+variable "secret_key" {}
+variable "token" {}
