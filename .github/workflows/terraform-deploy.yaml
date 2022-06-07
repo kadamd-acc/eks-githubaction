@@ -50,6 +50,8 @@ jobs:
        # if: github.ref == 'refs/heads/master'
         id: apply
         run: terraform apply -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
+      - name: Update kube config
+        run: aws eks update-kubeconfig --name acn-eks-clstr-testing --region eu-west-2
   comment:
     runs-on: ubuntu-latest
     needs: terraform
