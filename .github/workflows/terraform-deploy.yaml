@@ -7,9 +7,6 @@ on:
       - '*/**'
   pull_request:
     branches: [ main ]
-defaults:
-  run:
-    shell: bash
 jobs:
   terraform:
     name:   ${{matrix.runner}} - ${{ matrix.environment }}
@@ -19,7 +16,7 @@ jobs:
       matrix:
          include:
            - environment: test
-             runner: ubuntu-latest
+             runner: windows-latest
     env:
          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

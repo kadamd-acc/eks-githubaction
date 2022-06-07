@@ -7,9 +7,9 @@
 
 # Updating Kubeconfig file with EKS cluster details
 resource "null_resource" "update_kubeconfig_windows" {
-  count = (var.user_os == "ubuntu" && var.k8s_cluster_type == "eks") ? 1 : 0
+  count = (var.user_os == "windows" && var.k8s_cluster_type == "eks") ? 1 : 0
   provisioner "local-exec" {
-    interpreter = ["/bin/bash", "-Command"]
+    interpreter = ["PowerShell", "-Command"]
     command     = <<EOF
     aws eks update-kubeconfig --region '${data.aws_region.current.name}' --name '${data.aws_eks_cluster.selected[0].name}'
 EOF
@@ -18,9 +18,9 @@ EOF
 
 # Patching CoreDNS to remove EC2 annotations
 resource "null_resource" "coredns_patch_windows" {
-  count = (var.user_os == "ubuntu" && var.k8s_cluster_type == "eks") ? 1 : 0
+  count = (var.user_os == "windows" && var.k8s_cluster_type == "eks") ? 1 : 0
   provisioner "local-exec" {
-    interpreter = ["/bin/bash", "-Command"]
+    interpreter = ["PowerShell", "-Command"]
     command     = <<EOF
 kubectl  patch deployment coredns --namespace '${var.k8s_namespace}' --type=json -p='[{"op": "remove", "path": "/spec/template/metadata/annotations", "value": "eks.amazonaws.com/compute-type"}]'
 EOF
@@ -30,9 +30,9 @@ EOF
 
 # Restarting CoreDNS Pod
 resource "null_resource" "coredns_restart" {
-  count = (var.user_os == "ubuntu" && var.k8s_cluster_type == "eks") ? 1 : 0
+  count = (var.user_os == "windows" && var.k8s_cluster_type == "eks") ? 1 : 0
   provisioner "local-exec" {
-    interpreter = ["/bin/bash", "-Command"]
+    interpreter = ["PowerShell", "-Command"]
     command     = <<EOF
 kubectl  rollout restart -n '${var.k8s_namespace}'  deployment coredns
 EOF
