@@ -40,13 +40,21 @@ jobs:
         run: |
            rm -rf .terraform
            terraform init
+        env:
+          TF_VAR_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          TF_VAR_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_token: ${{ secrets.AWS_TOKEN }}
       - name: Terraform Plan
         id: plan
         run: |
           terraform plan -input=false -var-file=${{ matrix.environment }}/terraform.tfvars -no-color
+        env:
+          TF_VAR_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          TF_VAR_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TF_VAR_token: ${{ secrets.AWS_TOKEN }}
       - name: Terraform apply
         if: github.ref == 'refs/heads/master'
-        id: destroy
+        id: apply
         run: terraform apply -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
         env:
           TF_VAR_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
