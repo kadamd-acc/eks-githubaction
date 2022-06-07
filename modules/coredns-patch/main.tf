@@ -11,7 +11,7 @@ resource "null_resource" "update_kubeconfig_windows" {
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-Command"]
     command     = <<EOF
-    aws eks update-kubeconfig --region '${data.aws_region.current.name}' --name '${data.aws_eks_cluster.selected[0].name}'
+    aws eks update-kubeconfig --region '${data.aws_region.current.name}' --name '${data.aws_eks_cluster.selected[0].name}' --profile  '${var.user_profile}'
 EOF
   }
 }
