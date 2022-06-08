@@ -10,7 +10,7 @@ on:
 defaults:
   run:
     shell: bash
-    working-directory: ./eks-infra
+   # working-directory: ./eks-infra
 jobs:
   terraform:
     name:   ${{matrix.runner}} - ${{ matrix.environment }}
@@ -50,7 +50,7 @@ jobs:
         run: |
           terraform plan
       - name: Terraform apply
-        if: github.ref == 'refs/heads/master'
+        #if: github.ref == 'refs/heads/master'
         id: apply
         run: terraform apply -auto-approve
   comment:
