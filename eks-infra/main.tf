@@ -70,7 +70,7 @@ resource "null_resource" "update_kubeconfig_windows" {
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-Command"]
     command     = <<EOF
-    aws eks update-kubeconfig --region '${data.aws_region.current.name}' --name '${data.aws_eks_cluster.eks_cluster}'
+    aws eks update-kubeconfig --region '${data.aws_region.current.name}' --name '${module.eks.eks_cluster_name}'
 EOF
   }
   depends_on = [module.eks,module.coredns_patching]
