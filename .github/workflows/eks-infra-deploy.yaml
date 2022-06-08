@@ -34,6 +34,8 @@ jobs:
            cd /home/runner
            curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.22.0/bin/linux/amd64/kubectl
            chmod +x ./kubectl
+           mkdir .kube
+           chmod 755 .kube
            kubectl version --client
            pwd
            ls -lrt

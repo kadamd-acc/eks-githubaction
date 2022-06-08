@@ -65,6 +65,16 @@ module "eks_kubernetes_addons" {
   depends_on = [module.aws_alb_controller]
 }
 
+resource "null_resource" "update_kubeconfig_windows" {
+  count = (var.user_os == "linux" && var.cluster_type == "eks") ? 1 : 0
+  provisioner "local-exec" {
+    interpreter = ["/bin/bash", "-Command"]
+    command     = <<EOF
+    aws eks update-kubeconfig --region '${data.aws_region.current.name}' --name '${data.aws_eks_cluster.eks_cluster}'
+EOF
+  }
+  depends_on = [module.eks,module.coredns_patching]
+}
 #module "kubernetes_app" {
 #    source                      =  "./modules/kubernetes-app"
 #    app_namespace               =  var.fargate_app_namespace[0]
