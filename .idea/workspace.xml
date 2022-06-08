@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4a28eb1e-a781-4435-870c-b95ece79992c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/eks-infra/terraform.tfvars" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.github/workflows/terraform-deploy.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/terraform-deploy.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -31,6 +30,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Deepak\test\eks-githubaction\eks-infra" />
       <recent name="C:\Deepak\EKS_Fargate_Cluster_Terraform\kubernetes-addons\aws-vpc-cni" />
     </key>
   </component>
