@@ -4,12 +4,13 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'eks-infra/**'
+      - '*/**'
   pull_request:
     branches: [ master ]
 defaults:
   run:
     shell: bash
+    working-directory: ./eks-infra
 jobs:
   terraform:
     name:   ${{matrix.runner}} - ${{ matrix.environment }}
