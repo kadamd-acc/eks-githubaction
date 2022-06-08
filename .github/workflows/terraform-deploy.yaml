@@ -48,8 +48,8 @@ jobs:
 #       id: plan
 #       run: |
 #         terraform plan
-      - name: Terraform apply
-        if: github.ref == 'refs/heads/master'
+      - name: Terraform destroy
+        #if: github.ref == 'refs/heads/master'
         id: destroy
         run: terraform destroy -auto-approve
   comment:
