@@ -6,7 +6,7 @@ on:
     paths:
       - 'eks-infra/**'
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 defaults:
   run:
     shell: bash
