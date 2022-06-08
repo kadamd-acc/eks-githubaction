@@ -1,13 +1,14 @@
-name: "Terraform Deployment"
+name: terraform-automation
+
 on:
-  # Manual trigger
-  workflow_dispatch:
   push:
     paths:
     - 'eks-infra/**'
-    - 'modules/**'
-  pull_request:
-    branches: [ main ]
+
+concurrency:
+  group: ${{ github.action == 'terraform-automation' }}
+  cancel-in-progress: true
+
 defaults:
   run:
     shell: bash
