@@ -34,11 +34,12 @@ jobs:
            cd /home/runner
            curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.22.0/bin/linux/amd64/kubectl
            chmod +x ./kubectl
+           sudo mv ./kubectl /usr/local/bin/kubectl
            mkdir .kube
            chmod 755 .kube
            kubectl version --client
            pwd
-           ls -lrt
+           ls -lart
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
