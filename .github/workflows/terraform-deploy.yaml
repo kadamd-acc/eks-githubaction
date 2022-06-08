@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - '*/**'
+      - 'eks-infra/**'
   pull_request:
     branches: [ main ]
 defaults:
@@ -44,12 +44,12 @@ jobs:
            terraform init
       - name: Update kube config
         run: aws eks update-kubeconfig --name dummy-cluster --region eu-west-2
-#      - name: Terraform Plan
-#        id: plan
-#        run: |
-#          terraform plan -input=false -var-file=${{ matrix.environment }}/terraform.tfvars -no-color
-      - name: Terraform destroy
-       # if: github.ref == 'refs/heads/master'
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform plan -input=false -var-file=${{ matrix.environment }}/terraform.tfvars -no-color
+      - name: Terraform apply
+        if: github.ref == 'refs/heads/master'
         id: destroy
         run: terraform destroy -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
   comment:
