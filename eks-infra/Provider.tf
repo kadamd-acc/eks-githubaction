@@ -10,7 +10,7 @@ terraform {
   backend "s3" {
     bucket = "landg-terraform-state"
     key    = "eks/test/terraform.tfstate"
-    region = "eu-west-2"
+    region = var.region_name
     encrypt= true
 
   }
