@@ -37,6 +37,8 @@ jobs:
            sudo mv ./kubectl /usr/local/bin/kubectl
            mkdir .kube
            chmod 755 .kube
+           cd /home/runner/.kube
+           touch config
            kubectl version --client
            pwd
            ls -lart
