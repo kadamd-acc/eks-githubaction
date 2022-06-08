@@ -34,11 +34,7 @@ jobs:
            cd /home/runner
            curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.22.0/bin/linux/amd64/kubectl
            chmod +x ./kubectl
-           sudo mv ./kubectl /usr/local/bin/kubectl
-           mkdir .kube
-           cd /home/runner/.kube
-           chmod -R 755 /home/runner/.kube
-           touch config
+           mv ./kubectl /usr/local/bin/kubectl
            kubectl version --client
            pwd
            ls -lart
@@ -62,7 +58,7 @@ jobs:
         run: |
           terraform plan -input=false -var-file=${{ matrix.environment }}/terraform.tfvars -no-color
       - name: Terraform apply
-        #if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master'
         id: apply
         run: terraform apply -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
 #      - name: Terraform destroy
