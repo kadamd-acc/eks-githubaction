@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-    - '*/**'
+       - '*/**'
   pull_request:
     branches: [ main ]
 defaults:
@@ -61,10 +61,10 @@ jobs:
 #        if: github.ref == 'refs/heads/master'
 #        id: apply
 #        run: terraform apply -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
-     - name: Terraform destroy
+      - name: Terraform destroy
        #if: github.ref == 'refs/heads/master'
-       id: destroy
-       run: terraform destroy -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
+        id: destroy
+        run: terraform destroy -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
   comment:
     runs-on: ubuntu-latest
     needs: terraform
