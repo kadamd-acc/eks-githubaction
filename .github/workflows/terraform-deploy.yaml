@@ -45,14 +45,18 @@ jobs:
            terraform init
 #      - name: Update kube config
 #        run: aws eks update-kubeconfig --name dummy-cluster --region eu-west-2
-      - name: Terraform Plan
-        id: plan
-        run: |
-          terraform plan -input=false -var-file=${{ matrix.environment }}/terraform.tfvars -no-color
-      - name: Terraform apply
+#      - name: Terraform Plan
+#        id: plan
+#        run: |
+#          terraform plan -input=false -var-file=${{ matrix.environment }}/terraform.tfvars -no-color
+#      - name: Terraform apply
+#        #if: github.ref == 'refs/heads/master'
+#        id: apply
+#        run: terraform apply -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
+      - name: Terraform destroy
         #if: github.ref == 'refs/heads/master'
-        id: apply
-        run: terraform apply -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
+        id: destroy
+        run: terraform destroy -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
   comment:
     runs-on: ubuntu-latest
     needs: terraform
