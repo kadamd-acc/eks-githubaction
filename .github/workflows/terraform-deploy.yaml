@@ -42,8 +42,8 @@ jobs:
         run: |
            rm -rf .terraform
            terraform init
-      - name: Update kube config
-        run: aws eks update-kubeconfig --name dummy-cluster --region eu-west-2
+#      - name: Update kube config
+#        run: aws eks update-kubeconfig --name dummy-cluster --region eu-west-2
       - name: Terraform Plan
         id: plan
         run: |
