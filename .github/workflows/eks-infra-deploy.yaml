@@ -4,7 +4,8 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - '*/**'
+    - 'eks-infra/**'
+    - 'modules/**'
   pull_request:
     branches: [ main ]
 defaults:
