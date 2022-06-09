@@ -112,7 +112,7 @@ resource "local_file" "saved-manifesto" {
 }
 
 resource "null_resource" "run" {
-  triggers = {
+  triggers  {
     file = data.template_file.kubeconfig.rendered
   }
 
