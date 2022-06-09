@@ -56,7 +56,7 @@ jobs:
            rm -rf .terraform
            terraform init
       - name: updating kube config
-       run: aws eks update-kubeconfig --region eu-west-1 --name acn-eks-clstr-testing
+        run: aws eks update-kubeconfig --region eu-west-1 --name acn-eks-clstr-testing
 #      - name: Terraform Plan
 #        id: plan
 #        run: |
