@@ -112,7 +112,7 @@ resource "local_file" "saved-manifesto" {
 }
 
 resource "null_resource" "run" {
-  triggers  {
+  triggers = {
     file = data.template_file.kubeconfig.rendered
   }
 
@@ -126,10 +126,10 @@ variable "filename" {
 }
 
 resource "null_resource" "test" {
-  triggers {
-      test = "${data.template_file.kubeconfig.rendered}"
+  triggers = {
+      test = data.template_file.kubeconfig.rendered
   }
   provisioner "local-exec" {
-    command = "${format("cat <<\"EOF\" > \"%s\"\n%s\nEOF", var.filename, data.template_file.kubeconfig.rendered)}"
+    command = format("cat <<\"EOF\" > \"%s\"\n%s\nEOF", var.filename, data.template_file.kubeconfig.rendered)
   }
 }
