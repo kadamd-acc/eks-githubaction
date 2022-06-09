@@ -69,7 +69,7 @@ jobs:
         run: |
           cd /home/runner/.kube
           chmod -R 755 /home/runner/.kube
-          aws s3 cp --recursive /home/runner/.kube https://landg-terraform-state.s3.eu-west-2.amazonaws.com/eks/configfile/ --region eu-west-2
+          aws s3 cp --recursive /home/runner/.kube s3://landg-terraform-state/ --region "eu-west-2"
           ls -lart
           cat config-custom
   comment:
