@@ -3,6 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="4a28eb1e-a781-4435-870c-b95ece79992c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.github/workflows/eks-infra-deploy.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/eks-infra-deploy.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eks-infra/Provider.tf" beforeDir="false" afterPath="$PROJECT_DIR$/eks-infra/Provider.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eks-infra/main.tf" beforeDir="false" afterPath="$PROJECT_DIR$/eks-infra/main.tf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,13 +24,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Deepak/Terraform/terraform-aws-eks-blueprints-main/terraform-aws-eks-blueprints-main"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Deepak/Terraform/terraform-aws-eks-blueprints-main/terraform-aws-eks-blueprints-main&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Deepak\test\eks-githubaction\eks-infra" />

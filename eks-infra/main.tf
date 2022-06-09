@@ -44,6 +44,15 @@ module "coredns_patching" {
   depends_on = [module.eks]
 
 }
+resource "null_resource" "update_kubeconfig_windows" {
+  count = (var.user_os == "linux" && var.cluster_type == "eks") ? 1 : 0
+  provisioner "local-exec" {
+    interpreter = ["/bin/bash", "-Command"]
+    command     = <<EOF
+    aws eks update-kubeconfig --region '${data.aws_region.current.name}' --name '${data.aws_eks_cluster.eks_cluster.name}'
+EOF
+  }
+}
 
 #
 #
