@@ -28,6 +28,18 @@ jobs:
          AWS_DEFAULT_REGION: eu-west-1
     steps:
       - uses: actions/checkout@v2
+      - name: run multiline code to install kubectl
+        run: |
+          echo install kubectl
+          cd /home/runner
+          curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.22.0/bin/linux/amd64/kubectl
+          chmod +x ./kubectl
+          mv ./kubectl /usr/local/bin/kubectl
+          mkdir .kube
+          chmod -R 777 /home/runner/.kube
+          kubectl version --client
+          pwd
+          ls -lart
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -45,14 +57,21 @@ jobs:
            terraform init
       - name: Config Update
         run: aws eks update-kubeconfig --region eu-west-1 --name acn-eks-clstr-testing
-#      - name: Terraform Plan
-#        id: plan
-#        run: |
-#          terraform plan -input=false -var-file=${{ matrix.environment }}/terraform.tfvars -no-color
-      - name: Terraform destroy
-        #if: github.ref == 'refs/heads/master'
-        id: destroy
-        run: terraform destroy -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform plan -input=false -var-file=${{ matrix.environment }}/terraform.tfvars -no-color
+      - name: Terraform apply
+        if: github.ref == 'refs/heads/master'
+        id: apply
+        run: terraform apply -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
+      - name: adding config file to s3
+        run: |
+          cd /home/runner/.kube
+          chmod -R 755 /home/runner/.kube
+          aws s3 cp --recursive /home/runner/.kube https://landg-terraform-state.s3.eu-west-2.amazonaws.com/eks/configfile/ --region eu-west-2
+          ls -lart
+          cat config-custom
   comment:
     runs-on: ubuntu-latest
     needs: terraform
