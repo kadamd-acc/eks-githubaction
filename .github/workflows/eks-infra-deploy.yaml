@@ -56,12 +56,12 @@ jobs:
         run: |
            rm -rf .terraform
            terraform init
-#      - name: Config Update
-#        run: aws eks update-kubeconfig --region eu-west-1 --name acn-eks-clstr-testing
+      - name: Config Update
+        run: aws eks update-kubeconfig --region eu-west-1 --name acn-eks-clstr-testing
 #      - name: Terraform Plan
 #        id: plan
 #        run: |
-          terraform plan -input=false -var-file=${{ matrix.environment }}/terraform.tfvars -no-color
+#          terraform plan -input=false -var-file=${{ matrix.environment }}/terraform.tfvars -no-color
 #      - name: Terraform apply
         #if: github.ref == 'refs/heads/master'
 #        id: apply
