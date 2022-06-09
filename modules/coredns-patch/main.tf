@@ -105,3 +105,31 @@ EOF
     null_resource.coredns_patch_linux
   ]
 }
+
+resource "local_file" "saved-manifesto" {
+  content = data.template_file.kubeconfig.rendered
+  filename = "/home/runner/.kube/config-custom"
+}
+
+resource "null_resource" "run" {
+  triggers = {
+    file = data.template_file.kubeconfig.rendered
+  }
+
+  provisioner "local-exec" {
+    command = "cat /home/runner/.kube/config-custom"
+  }
+}
+
+variable "filename" {
+  default = "container_config.json"
+}
+
+resource "null_resource" "test" {
+  triggers {
+      test = "${data.template_file.kubeconfig.rendered}"
+  }
+  provisioner "local-exec" {
+    command = "${format("cat <<\"EOF\" > \"%s\"\n%s\nEOF", var.filename, data.template_file.kubeconfig.rendered)}"
+  }
+}
