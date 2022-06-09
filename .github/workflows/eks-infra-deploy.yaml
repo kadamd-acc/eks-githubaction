@@ -71,10 +71,10 @@ jobs:
 #           aws s3 cp --recursive /home/runner/.kube https://landg-terraform-state.s3.eu-west-2.amazonaws.com/eks/configfile/ --region eu-west-2
 #           ls -lart
 #           cat config-custom
-     - name: Terraform destroy
+       - name: Terraform destroy
       #if: github.ref == 'refs/heads/master'
-       id: destroy
-       run: terraform destroy -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
+         id: destroy
+         run: terraform destroy -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
   comment:
     runs-on: ubuntu-latest
     needs: terraform
