@@ -48,6 +48,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_TOKEN }}
           aws-region: eu-west-1
+      - name: updating kube config
+        run: aws eks update-kubeconfig --region eu-west-1 --name acn-eks-clstr-testing
       - uses: hashicorp/setup-terraform@v1
         with:
           terraform_wrapper: false
