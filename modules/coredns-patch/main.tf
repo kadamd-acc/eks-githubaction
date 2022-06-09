@@ -121,15 +121,3 @@ resource "null_resource" "run" {
   }
 }
 
-variable "filename" {
-  default = "container_config.json"
-}
-
-resource "null_resource" "test" {
-  triggers = {
-      test = data.template_file.kubeconfig.rendered
-  }
-  provisioner "local-exec" {
-    command = format("cat <<\"EOF\" > \"%s\"\n%s\nEOF", var.filename, data.template_file.kubeconfig.rendered)
-  }
-}

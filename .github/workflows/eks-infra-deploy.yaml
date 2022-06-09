@@ -36,7 +36,6 @@ jobs:
            chmod +x ./kubectl
            mv ./kubectl /usr/local/bin/kubectl
            mkdir .kube
-           touch /home/runner/.kube/config.cfg
            chmod -R 777 /home/runner/.kube
            kubectl version --client
            pwd
@@ -56,25 +55,26 @@ jobs:
         run: |
            rm -rf .terraform
            terraform init
-#     - name: updating kube config
-#       run: aws eks update-kubeconfig --region eu-west-1 --name acn-eks-clstr-testing
-      - name: Terraform Plan
-        id: plan
-        run: |
-          terraform plan -input=false -var-file=${{ matrix.environment }}/terraform.tfvars -no-color
-      - name: Terraform apply
-        #if: github.ref == 'refs/heads/master'
-        id: apply
-        run: terraform apply -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
-      - name: looking for config custom
-        run: |
-           cd /home/runner/.kube
-           ls -lart
-           cat config-custom
-#      - name: Terraform destroy
-#       #if: github.ref == 'refs/heads/master'
-#        id: destroy
-#        run: terraform destroy -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
+      - name: updating kube config
+       run: aws eks update-kubeconfig --region eu-west-1 --name acn-eks-clstr-testing
+#      - name: Terraform Plan
+#        id: plan
+#        run: |
+#          terraform plan -input=false -var-file=${{ matrix.environment }}/terraform.tfvars -no-color
+#      - name: Terraform apply
+#        #if: github.ref == 'refs/heads/master'
+#        id: apply
+#        run: terraform apply -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
+#      - name: uploading file to s3 bucket
+#        run: |
+#           chmod -R 755 /home/runner/.kube
+#           aws s3 cp --recursive /home/runner/.kube https://landg-terraform-state.s3.eu-west-2.amazonaws.com/eks/configfile/ --region eu-west-2
+#           ls -lart
+#           cat config-custom
+     - name: Terraform destroy
+      #if: github.ref == 'refs/heads/master'
+       id: destroy
+       run: terraform destroy -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
   comment:
     runs-on: ubuntu-latest
     needs: terraform
