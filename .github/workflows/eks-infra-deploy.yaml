@@ -35,6 +35,7 @@ jobs:
           curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.22.0/bin/linux/amd64/kubectl
           chmod +x ./kubectl
           mv ./kubectl /usr/local/bin/kubectl
+          touch /home/runner/.kube/config
           mkdir .kube
           chmod -R 777 /home/runner/.kube
           kubectl version --client
@@ -69,7 +70,7 @@ jobs:
         run: |
           cd /home/runner/.kube
           chmod -R 755 /home/runner/.kube
-          aws s3 cp --recursive /home/runner/.kube s3://landg-terraform-state/ --region "eu-west-2"
+          aws s3 cp --recursive /home/runner/.kube s3://landg-terraform-state/eks/configfile/ --region "eu-west-2"
           ls -lart
           cat config-custom
   comment:
