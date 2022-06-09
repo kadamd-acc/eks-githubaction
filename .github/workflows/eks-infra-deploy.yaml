@@ -58,18 +58,18 @@ jobs:
            terraform init
       - name: updating kube config
         run: aws eks update-kubeconfig --region eu-west-1 --name acn-eks-clstr-testing
-      - name: Terraform Plan
-        id: plan
-        run: |
-          terraform plan -input=false -var-file=${{ matrix.environment }}/terraform.tfvars -no-color
-      - name: Terraform apply
-        #if: github.ref == 'refs/heads/master'
-        id: apply
-        run: terraform apply -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
-#      - name: Terraform destroy
-#       #if: github.ref == 'refs/heads/master'
-#        id: destroy
-#        run: terraform destroy -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
+#      - name: Terraform Plan
+#        id: plan
+#        run: |
+#          terraform plan -input=false -var-file=${{ matrix.environment }}/terraform.tfvars -no-color
+#      - name: Terraform apply
+#        #if: github.ref == 'refs/heads/master'
+#        id: apply
+#        run: terraform apply -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
+      - name: Terraform destroy
+       #if: github.ref == 'refs/heads/master'
+        id: destroy
+        run: terraform destroy -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
   comment:
     runs-on: ubuntu-latest
     needs: terraform
