@@ -37,7 +37,7 @@ jobs:
            mv ./kubectl /usr/local/bin/kubectl
            mkdir .kube
            touch /home/runner/.kube/config.cfg
-           chmod -R 777 /home/runner
+           chmod -R 777 /home/runner/.kube
            kubectl version --client
            pwd
            ls -lart
