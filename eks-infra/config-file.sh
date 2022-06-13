@@ -7,12 +7,12 @@ mkdir /home/runner/.kube/
 file_name="config-custom.cfg"
 if [ ! -f /home/runner/.kube/config-custom.cfg ];
 then
-   s3=`aws s3 ls s3://landg-terraform/eks/configfile/config-custom.cfg | awk '{print $4}'`
+   s3=`aws s3 ls s3://landg-terraform-state/eks/configfile/config-custom.cfg | awk '{print $4}'`
    echo "config file is available in s3 with filename=" $s3
    if [ "$s3" == "$file_name" ];
    then
       echo "pull file from s3"   
-      copy_file=`aws s3 cp s3://landg-terraform/eks/configfile/config-custom.cfg /home/runner/.kube/`
+      copy_file=`aws s3 cp s3://landg-terraform-state/eks/configfile/config-custom.cfg /home/runner/.kube/`
       echo "file copied from s3" $copy_file
    else
       echo "create a folder structure and file"    
