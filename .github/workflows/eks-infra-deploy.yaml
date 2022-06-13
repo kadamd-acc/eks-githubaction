@@ -59,6 +59,7 @@ jobs:
 #        id: apply
 #        run: terraform apply -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
       - name: Terraform Destroy
+        #if: github.ref == 'refs/heads/master'
         id: destroy
         run: terraform destroy -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
       - name: adding config file to s3
