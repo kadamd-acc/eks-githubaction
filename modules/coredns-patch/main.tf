@@ -72,8 +72,6 @@ data "template_file" "kubeconfig" {
   EOF
 }
 
-
-
 # Per AWS docs, you have to patch the coredns deployment to remove the
 # constraint that it wants to run on ec2, then restart it.
 
