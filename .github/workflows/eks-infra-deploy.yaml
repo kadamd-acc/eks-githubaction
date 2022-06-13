@@ -67,7 +67,6 @@ jobs:
           cat config-custom
   comment:
     runs-on: ubuntu-latest
-    needs: terraform
     if: github.event_name == 'pull_request'
     steps:
       - uses: actions/github-script@v5
