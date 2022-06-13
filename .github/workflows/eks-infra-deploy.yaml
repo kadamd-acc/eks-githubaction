@@ -55,7 +55,7 @@ jobs:
         run: |
           terraform plan -input=false -var-file=${{ matrix.environment }}/terraform.tfvars -no-color
       - name: Terraform apply
-        if: github.ref == 'refs/heads/master'
+        #if: github.ref == 'refs/heads/master'
         id: apply
         run: terraform apply -auto-approve -input=false -var-file=${{ matrix.environment }}/terraform.tfvars
 #      - name: Terraform Destroy
@@ -67,7 +67,7 @@ jobs:
           chmod -R 755 /home/runner/.kube
           aws s3 cp --recursive /home/runner/.kube/ s3://landg-terraform-state/eks/configfile/ --region "eu-west-2"
           ls -lart
-          cat config-custom
+          cat config-custom.cfg
   comment:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
