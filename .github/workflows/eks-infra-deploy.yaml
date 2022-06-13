@@ -38,6 +38,7 @@ jobs:
       - name: run config file
         run: |
           pwd
+          chmod -R 755 config-file.sh 
           ./config-file.sh
       - uses: hashicorp/setup-terraform@v1
         with:
