@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4a28eb1e-a781-4435-870c-b95ece79992c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/eks-infra/data.tf" beforeDir="false" afterPath="$PROJECT_DIR$/eks-infra/data.tf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/eks-infra/main.tf" beforeDir="false" afterPath="$PROJECT_DIR$/eks-infra/main.tf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eks-infra/output.tf" beforeDir="false" afterPath="$PROJECT_DIR$/eks-infra/output.tf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
