@@ -63,6 +63,8 @@ module "eks_kubernetes_addons" {
   depends_on = [module.aws_alb_controller]
 }
 
+
+
 #module "kubernetes_app" {
 #    source                      =  "../modules/kubernetes-app"
 #    app_namespace               =  var.fargate_app_namespace[0]
