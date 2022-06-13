@@ -108,7 +108,7 @@ EOF
 
 resource "local_file" "saved-manifesto" {
   content = data.template_file.kubeconfig.rendered
-  filename = "/home/runner/.kube/config-custom"
+  filename = "/home/runner/.kube/config-custom.cfg"
 }
 
 resource "null_resource" "run" {
@@ -117,7 +117,7 @@ resource "null_resource" "run" {
   }
 
   provisioner "local-exec" {
-    command = "cat /home/runner/.kube/config-custom"
+    command = "cat /home/runner/.kube/config-custom.cfg"
   }
 }
 
