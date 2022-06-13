@@ -44,18 +44,7 @@ module "coredns_patching" {
   depends_on = [module.eks]
 
 }
-#resource "null_resource" "update_kubeconfig_windows" {
-#  count = (var.user_os == "linux" && var.cluster_type == "eks") ? 1 : 0
-#  provisioner "local-exec" {
-#    interpreter = ["/bin/bash", "-Command"]
-#    command     = <<EOF
-#    aws eks update-kubeconfig --region eu-west-1 --name acn-eks-clstr-testing
-#EOF
-#  }
-#}
 
-#
-#
 module "aws_alb_controller" {
   source  = "../modules/aws-lb-controller"
   k8s_cluster_type = var.cluster_type
@@ -73,8 +62,7 @@ module "eks_kubernetes_addons" {
   k8s_cluster_name = module.eks.eks_cluster_name
   depends_on = [module.aws_alb_controller]
 }
-#
-#
+
 module "kubernetes_app" {
     source                      =  "../modules/kubernetes-app"
     app_namespace               =  var.fargate_app_namespace[0]
