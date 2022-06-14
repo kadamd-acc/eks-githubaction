@@ -65,7 +65,7 @@ data "template_file" "kubeconfig" {
     contexts:
     - name: terraform
       context:
-        cluster: ${data.aws_eks_cluster.selected[0].arn}
+        cluster: ${data.aws_eks_cluster.selected[0].name}
         user: terraform
     users:
     - name: terraform
