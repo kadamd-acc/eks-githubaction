@@ -49,6 +49,8 @@
 # ONLY applicable for Linux
 
 # Generate a kubeconfig file for the EKS cluster to use in provisioners
+
+
 data "template_file" "kubeconfig" {
 #count = (var.user_os == "linux" && var.k8s_cluster_type == "eks") ? 1 : 0
   template = <<-EOF
@@ -60,13 +62,11 @@ data "template_file" "kubeconfig" {
       cluster:
         certificate-authority-data: ${data.aws_eks_cluster.selected[0].certificate_authority.0.data}
         server: ${data.aws_eks_cluster.selected[0].endpoint}
-      name: ${data.aws_eks_cluster.selected[0].arn}
     contexts:
     - name: terraform
       context:
         cluster: ${data.aws_eks_cluster.selected[0].arn}
         user: terraform
-      name: ${data.aws_eks_cluster.selected[0].arn}
     users:
     - name: terraform
       user:
