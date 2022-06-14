@@ -60,11 +60,13 @@ data "template_file" "kubeconfig" {
       cluster:
         certificate-authority-data: ${data.aws_eks_cluster.selected[0].certificate_authority.0.data}
         server: ${data.aws_eks_cluster.selected[0].endpoint}
+      name: ${data.aws_eks_cluster.selected[0].arn}
     contexts:
     - name: terraform
       context:
-        cluster: ${data.aws_eks_cluster.selected[0].name}
+        cluster: ${data.aws_eks_cluster.selected[0].arn}
         user: terraform
+      name: ${data.aws_eks_cluster.selected[0].arn}
     users:
     - name: terraform
       user:
