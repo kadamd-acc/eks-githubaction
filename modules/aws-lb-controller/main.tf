@@ -144,44 +144,91 @@ resource "kubernetes_cluster_role_binding" "this" {
     namespace = kubernetes_service_account.this.metadata[0].namespace
   }
 }
-
-resource "helm_release" "alb_controller" {
-
+#
+#resource "helm_release" "alb_controller" {
+#
+#  name       = "aws-load-balancer-controller"
+#  repository = local.alb_controller_helm_repo
+#  chart      = local.alb_controller_chart_name
+#  version    = local.alb_controller_chart_version
+#  namespace  = var.k8s_namespace
+#  atomic     = true
+#  timeout    = 900
+#
+#  dynamic "set" {
+#
+#    for_each = {
+#      "clusterName"           = var.k8s_cluster_name
+#      "serviceAccount.create" = (var.k8s_cluster_type != "eks")
+#      "serviceAccount.name"   = (var.k8s_cluster_type == "eks") ? kubernetes_service_account.this.metadata[0].name : null
+#      "region"                = local.aws_region_name
+#      "vpcId"                 = local.aws_vpc_id
+#      "hostNetwork"           = var.enable_host_networking
+#    }
+#    content {
+#      name  = set.key
+#      value = set.value
+#    }
+#  }
+#
+#  dynamic "set" {
+#    for_each = var.chart_env_overrides
+#    content {
+#      name  = set.key
+#      value = set.value
+#    }
+#  }
+#
+#  depends_on = [var.alb_controller_depends_on]
+#}
+#
+resource "helm_release" "loadbalancer_controller" {
+  depends_on = [aws_iam_role.this]
   name       = "aws-load-balancer-controller"
-  repository = local.alb_controller_helm_repo
-  chart      = local.alb_controller_chart_name
-  version    = local.alb_controller_chart_version
-  namespace  = var.k8s_namespace
-  atomic     = true
-  timeout    = 900
 
-  dynamic "set" {
+  repository = "https://aws.github.io/eks-charts"
+  chart      = "aws-load-balancer-controller"
 
-    for_each = {
-      "clusterName"           = var.k8s_cluster_name
-      "serviceAccount.create" = (var.k8s_cluster_type != "eks")
-      "serviceAccount.name"   = (var.k8s_cluster_type == "eks") ? kubernetes_service_account.this.metadata[0].name : null
-      "region"                = local.aws_region_name
-      "vpcId"                 = local.aws_vpc_id
-      "hostNetwork"           = var.enable_host_networking
-    }
-    content {
-      name  = set.key
-      value = set.value
-    }
+  namespace = "kube-system"
+
+  # Value changes based on your Region (Below is for us-east-1)
+  set {
+    name = "image.repository"
+    value = "602401143452.dkr.ecr.eu-west-1.amazonaws.com/amazon/aws-load-balancer-controller"
+    # Changes based on Region - This is for us-east-1 Additional Reference: https://docs.aws.amazon.com/eks/latest/userguide/add-ons-images.html
   }
 
-  dynamic "set" {
-    for_each = var.chart_env_overrides
-    content {
-      name  = set.key
-      value = set.value
-    }
+  set {
+    name  = "serviceAccount.create"
+    value = "true"
   }
 
-  depends_on = [var.alb_controller_depends_on]
+  set {
+    name  = "serviceAccount.name"
+    value = "aws-load-balancer-controller"
+  }
+
+  set {
+    name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    value = "${aws_iam_role.this.arn}"
+  }
+
+  set {
+    name  = "vpcId"
+    value = local.aws_vpc_id
+  }
+
+  set {
+    name  = "region"
+    value = local.aws_region_name
+  }
+
+  set {
+    name  = "clusterName"
+    value = var.k8s_cluster_name
+  }
+
 }
-
 
 
 #May not require the below code block
