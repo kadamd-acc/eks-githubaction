@@ -1,3 +1,4 @@
+
 data "aws_vpc" "selected" {
   id = var.k8s_cluster_type == "eks" ? data.aws_eks_cluster.selected[0].vpc_config[0].vpc_id : var.aws_vpc_id
 }
@@ -13,27 +14,14 @@ data "aws_caller_identity" "current" {}
 data "aws_eks_cluster" "selected" {
   count      = var.k8s_cluster_type == "eks" ? 1 : 0
   name       = var.k8s_cluster_name
-  depends_on = [var.alb_controller_depends_on]
 }
 
 # Authentication data for that cluster
 data "aws_eks_cluster_auth" "selected" {
   count      = var.k8s_cluster_type == "eks" ? 1 : 0
   name       = var.k8s_cluster_name
-  depends_on = [var.alb_controller_depends_on]
 }
 
-data "aws_iam_policy_document" "ec2_assume_role" {
-  count = var.k8s_cluster_type == "vanilla" ? 1 : 0
-  statement {
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
-    }
-  }
-}
 
 data "aws_iam_policy_document" "eks_oidc_assume_role" {
   count = var.k8s_cluster_type == "eks" ? 1 : 0
@@ -44,7 +32,7 @@ data "aws_iam_policy_document" "eks_oidc_assume_role" {
       test     = "StringEquals"
       variable = "${replace(data.aws_eks_cluster.selected[0].identity[0].oidc[0].issuer, "https://", "")}:sub"
       values = [
-        "system:serviceaccount:${var.k8s_namespace}:aws-load-balancer-controller"
+        "system:serviceaccount:${var.k8s_namespace}:${local.service_account_name}"
       ]
     }
     principals {
@@ -55,4 +43,3 @@ data "aws_iam_policy_document" "eks_oidc_assume_role" {
     }
   }
 }
-
