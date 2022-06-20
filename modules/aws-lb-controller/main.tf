@@ -6,6 +6,7 @@ locals {
   aws_vpc_id                   = data.aws_vpc.selected.id
   aws_region_name              = data.aws_region.current.name
   aws_iam_path_prefix          = var.aws_iam_path_prefix == "" ? null : var.aws_iam_path_prefix
+  service_account_name         = substr("${var.k8s_cluster_name}-aws-load-balancer-controller",0,64)
 }
 
 resource "aws_iam_role" "this" {
@@ -45,9 +46,9 @@ resource "aws_iam_role_policy_attachment" "vpc-cni-addon" {
 }
 
 resource "kubernetes_service_account" "this" {
- # automount_service_account_token = true
+  automount_service_account_token = true
   metadata {
-    name      = "aws-load-balancer-controller"
+    name      =  local.service_account_name
     namespace = var.k8s_namespace
     annotations = {
       # This annotation is only used when running on EKS which can
@@ -55,12 +56,13 @@ resource "kubernetes_service_account" "this" {
       "eks.amazonaws.com/role-arn" = aws_iam_role.this.arn
     }
     labels = {
-      "app.kubernetes.io/name"       = "aws-load-balancer-controller"
+      "app.kubernetes.io/name"       = local.service_account_name
       "app.kubernetes.io/component"  = "controller"
-      "app.kubernetes.io/managed-by" = "terraform"
+      "app.kubernetes.io/managed-by" = "helm" # "terraform" #
+      "meta.helm.sh/release-name"   = "aws-load-balancer-controller"
+      "meta.helm.sh/release-namespace" = var.k8s_namespace
     }
   }
-  depends_on = [var.alb_controller_depends_on]
 }
 
 resource "kubernetes_cluster_role" "this" {
@@ -182,128 +184,94 @@ resource "kubernetes_cluster_role_binding" "this" {
 #  depends_on = [var.alb_controller_depends_on]
 #}
 #
-resource "helm_release" "loadbalancer_controller" {
-  depends_on = [aws_iam_role.this]
+#resource "helm_release" "loadbalancer_controller" {
+#  depends_on = [aws_iam_role.this]
+#  name       = "aws-load-balancer-controller"
+#
+#  repository = "https://aws.github.io/eks-charts"
+#  chart      = "aws-load-balancer-controller"
+#
+#  namespace = "kube-system"
+#
+#  # Value changes based on your Region (Below is for us-east-1)
+#  set {
+#    name = "image.repository"
+#    value = "602401143452.dkr.ecr.eu-west-1.amazonaws.com/amazon/aws-load-balancer-controller"
+#    # Changes based on Region - This is for us-east-1 Additional Reference: https://docs.aws.amazon.com/eks/latest/userguide/add-ons-images.html
+#  }
+#
+#  set {
+#    name  = "serviceAccount.create"
+#    value = "true"
+#  }
+#
+#  set {
+#    name  = "serviceAccount.name"
+#    value = "aws-load-balancer-controller"
+#  }
+#
+#  set {
+#    name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+#    value = "${aws_iam_role.this.arn}"
+#  }
+#
+#  set {
+#    name  = "vpcId"
+#    value = local.aws_vpc_id
+#  }
+#
+#  set {
+#    name  = "region"
+#    value = local.aws_region_name
+#  }
+#
+#  set {
+#    name  = "clusterName"
+#    value = var.k8s_cluster_name
+#  }
+#
+#}
+
+resource "helm_release" "alb_controller" {
+
   name       = "aws-load-balancer-controller"
-
-  repository = "https://aws.github.io/eks-charts"
-  chart      = "aws-load-balancer-controller"
-
-  namespace = "kube-system"
-
-  # Value changes based on your Region (Below is for us-east-1)
-  set {
-    name = "image.repository"
-    value = "602401143452.dkr.ecr.eu-west-1.amazonaws.com/amazon/aws-load-balancer-controller"
-    # Changes based on Region - This is for us-east-1 Additional Reference: https://docs.aws.amazon.com/eks/latest/userguide/add-ons-images.html
-  }
+  repository = local.alb_controller_helm_repo
+  chart      = local.alb_controller_chart_name
+  version    = local.alb_controller_chart_version
+  namespace  = var.k8s_namespace
+  create_namespace = false
+  atomic     = true
+  timeout    = 900
+  cleanup_on_fail = true
 
   set {
-    name  = "serviceAccount.create"
-    value = "true"
+      name = "clusterName"
+      value = var.k8s_cluster_name
+      type = "string"
   }
-
   set {
-    name  = "serviceAccount.name"
-    value = "aws-load-balancer-controller"
+      name = "serviceAccount.create"
+      value = "false"
+      type = "auto"
   }
-
   set {
-    name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    value = "${aws_iam_role.this.arn}"
+      name = "serviceAccount.name"
+      value = kubernetes_service_account.this.metadata[0].name
+      type = "string"
   }
-
   set {
-    name  = "vpcId"
-    value = local.aws_vpc_id
+      name = "region"
+      value = local.aws_region_name
+      type = "string"
   }
-
   set {
-    name  = "region"
-    value = local.aws_region_name
+      name = "vpcId"
+      value = local.aws_vpc_id
+      type = "string"
   }
-
   set {
-    name  = "clusterName"
-    value = var.k8s_cluster_name
+      name =  "hostNetwork"
+      value =   var.enable_host_networking
+      type = "auto"
   }
-
 }
-
-
-#May not require the below code block
-
-/*
-# Generate a kubeconfig file for the EKS cluster to use in provisioners
-data "template_file" "kubeconfig" {
-  template = <<-EOF
-    apiVersion: v1
-    kind: Config
-    current-context: terraform
-    clusters:
-    - name: ${data.aws_eks_cluster.selected[0].name}
-      cluster:
-        certificate-authority-data: ${data.aws_eks_cluster.selected[0].certificate_authority.0.data}
-        server: ${data.aws_eks_cluster.selected[0].endpoint}
-    contexts:
-    - name: terraform
-      context:
-        cluster: ${data.aws_eks_cluster.selected[0].name}
-        user: terraform
-    users:
-    - name: terraform
-      user:
-        token: ${data.aws_eks_cluster_auth.selected[0].token}
-  EOF
-}
-
-# Since the kubernetes_provider cannot yet handle CRDs, we need to set any
-# supplied TargetGroupBinding using a null_resource.
-#
-# The method used below for securely specifying the kubeconfig to provisioners
-# without spilling secrets into the logs comes from:
-# https://medium.com/citihub/a-more-secure-way-to-call-kubectl-from-terraform-1052adf37af8
-#
-# The method used below for referencing external resources in a destroy
-# provisioner via triggers comes from
-# https://github.com/hashicorp/terraform/issues/23679#issuecomment-886020367
-resource "null_resource" "supply_target_group_arns" {
-  count = (length(var.target_groups) > 0) ? length(var.target_groups) : 0
-
-  triggers = {
-    kubeconfig  = base64encode(data.template_file.kubeconfig.rendered)
-    cmd_create  = <<-EOF
-      cat <<YAML | kubectl -n ${var.k8s_namespace} --kubeconfig <(echo $KUBECONFIG | base64 --decode) apply -f -
-      apiVersion: elbv2.k8s.aws/v1beta1
-      kind: TargetGroupBinding
-      metadata:
-        name: ${lookup(var.target_groups[count.index], "name", "")}-tgb
-      spec:
-        serviceRef:
-          name: ${lookup(var.target_groups[count.index], "name", "")}
-          port: ${lookup(var.target_groups[count.index], "backend_port", "")}
-        targetGroupARN: ${lookup(var.target_groups[count.index], "target_group_arn", "")}
-        targetType:  ${lookup(var.target_groups[count.index], "target_type", "instance")}
-      YAML
-    EOF
-    cmd_destroy = "kubectl -n ${var.k8s_namespace} --kubeconfig <(echo $KUBECONFIG | base64 --decode) delete TargetGroupBinding ${lookup(var.target_groups[count.index], "name", "")}-tgb"
-  }
-
-  provisioner "local-exec" {
-    interpreter = ["/bin/bash", "-c"]
-    environment = {
-      KUBECONFIG = self.triggers.kubeconfig
-    }
-    command = self.triggers.cmd_create
-  }
-  provisioner "local-exec" {
-    when        = destroy
-    interpreter = ["/bin/bash", "-c"]
-    environment = {
-      KUBECONFIG = self.triggers.kubeconfig
-    }
-    command = self.triggers.cmd_destroy
-  }
-  depends_on = [helm_release.alb_controller]
-}
-*/
