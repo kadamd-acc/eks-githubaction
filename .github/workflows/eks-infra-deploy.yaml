@@ -1,4 +1,4 @@
-name: "Terraform Deployment"
+name: "Terraform Deployment for EKS"
 on:
   # Manual trigger
   workflow_dispatch:
